@@ -18,9 +18,10 @@ const _sfc_main = {
   setup(__props) {
     const systemInfo = common_vendor.wx$1.getSystemInfoSync();
     const menuButtonInfo = common_vendor.wx$1.getMenuButtonBoundingClientRect();
-    common_vendor.index.__f__("log", "at pages/home/index.vue:80", systemInfo.statusBarHeight, "状态栏的高度");
-    common_vendor.index.__f__("log", "at pages/home/index.vue:81", menuButtonInfo.top - systemInfo.statusBarHeight, "胶囊顶部到状态栏的高度");
+    common_vendor.index.__f__("log", "at pages/home/index.vue:81", systemInfo.statusBarHeight, "状态栏的高度");
+    common_vendor.index.__f__("log", "at pages/home/index.vue:82", menuButtonInfo.top - systemInfo.statusBarHeight, "胶囊顶部到状态栏的高度");
     const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight);
+    const currentAddress = common_vendor.ref("定位中...");
     const keyword = common_vendor.ref();
     const list = common_vendor.reactive([
       "/static/swiper/swiper(1).png",
@@ -111,7 +112,10 @@ const _sfc_main = {
       }
     ]);
     const categoryClick = (id) => {
-      common_vendor.index.__f__("log", "at pages/home/index.vue:183", "点击分类:", id);
+      common_vendor.index.__f__("log", "at pages/home/index.vue:186", "点击分类:", id);
+      common_vendor.index.navigateTo({
+        url: `/pages/goods/index?categoryId=${id}`
+      });
     };
     const recommendList = common_vendor.ref([
       {
@@ -200,16 +204,55 @@ const _sfc_main = {
         price: "35"
       }
     ]);
+    const getLocation = () => {
+      common_vendor.index.getLocation({
+        type: "wgs84",
+        success: (res) => {
+          common_vendor.index.__f__("log", "at pages/home/index.vue:287", "获取位置成功:", res);
+          currentAddress.value = res.address;
+        },
+        fail: (err) => {
+          common_vendor.index.__f__("log", "at pages/home/index.vue:291", "获取位置失败:", err);
+          if (err.errMsg.includes("auth deny") || err.errMsg.includes("unauthorized")) {
+            handleAuthDeny();
+          } else {
+            err = "定位失败，请稍后重试";
+          }
+        }
+      });
+    };
+    const handleAuthDeny = () => {
+      common_vendor.index.showModal({
+        title: "提示",
+        content: "请允许小程序获取您的位置信息",
+        success: (res) => {
+          if (res.confirm) {
+            common_vendor.index.openSetting({
+              success: (res2) => {
+                common_vendor.index.__f__("log", "at pages/home/index.vue:309", "打开设置成功:", res2);
+              },
+              fail: (err) => {
+                common_vendor.index.__f__("log", "at pages/home/index.vue:312", "打开设置失败:", err);
+              }
+            });
+          }
+        }
+      });
+    };
+    common_vendor.onMounted(() => {
+      getLocation();
+    });
     return (_ctx, _cache) => {
       return {
         a: common_assets._imports_0,
-        b: common_vendor.o(($event) => keyword.value = $event),
-        c: common_vendor.p({
+        b: common_vendor.t(currentAddress.value),
+        c: common_vendor.o(($event) => keyword.value = $event),
+        d: common_vendor.p({
           placeholder: "搜索宠物食品",
           animation: true,
           modelValue: keyword.value
         }),
-        d: common_vendor.p({
+        e: common_vendor.p({
           list,
           previousMargin: "30",
           nextMargin: "30",
@@ -219,7 +262,7 @@ const _sfc_main = {
           bgColor: "#ffffff",
           height: "180"
         }),
-        e: common_vendor.f(categoryList.value, (item, k0, i0) => {
+        f: common_vendor.f(categoryList.value, (item, k0, i0) => {
           return {
             a: item.icon,
             b: common_vendor.t(item.name),
@@ -227,7 +270,7 @@ const _sfc_main = {
             d: common_vendor.o(($event) => categoryClick(item.id), item.id)
           };
         }),
-        f: common_vendor.f(recommendList.value, (item, k0, i0) => {
+        g: common_vendor.f(recommendList.value, (item, k0, i0) => {
           return {
             a: item.img,
             b: common_vendor.t(item.title),
@@ -236,8 +279,8 @@ const _sfc_main = {
             e: item.id
           };
         }),
-        g: common_assets._imports_1,
-        h: common_vendor.w(({
+        h: common_assets._imports_0$1,
+        i: common_vendor.w(({
           colList,
           colIndex
         }, s0, i0) => {
@@ -256,17 +299,17 @@ const _sfc_main = {
           };
         }, {
           name: "column",
-          path: "h",
+          path: "i",
           vueId: "4978fed5-2"
         }),
-        i: common_assets._imports_1,
-        j: common_vendor.sr("waterfall", "4978fed5-2"),
-        k: common_vendor.o(($event) => flowList.value = $event),
-        l: common_vendor.p({
+        j: common_assets._imports_0$1,
+        k: common_vendor.sr("waterfall", "4978fed5-2"),
+        l: common_vendor.o(($event) => flowList.value = $event),
+        m: common_vendor.p({
           columns: "2",
           modelValue: flowList.value
         }),
-        m: customNavBarHeight + "px"
+        n: customNavBarHeight + "px"
       };
     };
   }

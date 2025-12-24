@@ -6337,7 +6337,7 @@ const showActionSheet = {
     toArgs.alertText = fromArgs.title;
   }
 };
-const getDeviceInfo = {
+const getDeviceInfo$1 = {
   returnValue: (fromRes, toRes) => {
     const { brand, model, system = "", platform: platform2 = "" } = fromRes;
     let deviceType = getGetDeviceType(fromRes, model);
@@ -6597,7 +6597,7 @@ var protocols = /* @__PURE__ */ Object.freeze({
   compressImage,
   getAppAuthorizeSetting,
   getAppBaseInfo,
-  getDeviceInfo,
+  getDeviceInfo: getDeviceInfo$1,
   getSystemInfo,
   getSystemInfoSync,
   getWindowInfo: getWindowInfo$1,
@@ -8413,6 +8413,11 @@ function sys() {
 function getWindowInfo() {
   let ret = {};
   ret = index$1.getWindowInfo();
+  return ret;
+}
+function getDeviceInfo() {
+  let ret = {};
+  ret = index$1.getDeviceInfo();
   return ret;
 }
 function random(min, max) {
@@ -12335,7 +12340,7 @@ const Upload = {
     videoPreviewObjectFit: "cover"
   }
 };
-const props$5 = {
+const props$a = {
   ...ActionSheet,
   ...Album,
   ...Alert,
@@ -12428,7 +12433,7 @@ const props$5 = {
 };
 function setConfig$1(configs) {
   shallowMerge(config, configs.config || {});
-  shallowMerge(props$5, configs.props || {});
+  shallowMerge(props$a, configs.props || {});
   shallowMerge(color$3, configs.color || {});
   shallowMerge(zIndex, configs.zIndex || {});
 }
@@ -12485,7 +12490,7 @@ const fontUtil = {
 let themeType = ["primary", "success", "error", "warning", "info"];
 function setConfig(configs) {
   index.shallowMerge(config, configs.config || {});
-  index.shallowMerge(props$5, configs.props || {});
+  index.shallowMerge(props$a, configs.props || {});
   index.shallowMerge(color$3, configs.color || {});
   index.shallowMerge(zIndex, configs.zIndex || {});
 }
@@ -12532,32 +12537,32 @@ const install = (Vue, upuiParams = "") => {
 const uviewPlus = {
   install
 };
-const props$4 = defineMixin({
+const props$9 = defineMixin({
   props: {
     // 绑定的值
     modelValue: {
       type: [String, Number],
-      default: () => props$5.search.value
+      default: () => props$a.search.value
     },
     // 搜索框形状，round-圆形，square-方形
     shape: {
       type: String,
-      default: () => props$5.search.shape
+      default: () => props$a.search.shape
     },
     // 搜索框背景色
     bgColor: {
       type: String,
-      default: () => props$5.search.bgColor
+      default: () => props$a.search.bgColor
     },
     // 占位提示文字
     placeholder: {
       type: String,
-      default: () => props$5.search.placeholder
+      default: () => props$a.search.placeholder
     },
     // 是否启用清除控件
     clearabled: {
       type: Boolean,
-      default: () => props$5.search.clearabled
+      default: () => props$a.search.clearabled
     },
     // 是否仅聚焦时显示清除控件
     onlyClearableOnFocused: {
@@ -12567,237 +12572,424 @@ const props$4 = defineMixin({
     // 是否自动聚焦
     focus: {
       type: Boolean,
-      default: () => props$5.search.focus
+      default: () => props$a.search.focus
     },
     // 是否在搜索框右侧显示取消按钮
     showAction: {
       type: Boolean,
-      default: () => props$5.search.showAction
+      default: () => props$a.search.showAction
     },
     // 右侧取消按钮文字
     actionText: {
       type: String,
-      default: () => props$5.search.actionText
+      default: () => props$a.search.actionText
     },
     // 搜索框左侧文本
     label: {
       type: [String, Number, null],
-      default: () => props$5.search.label
+      default: () => props$a.search.label
     },
     // 输入框内容对齐方式，可选值为：left|center|right
     inputAlign: {
       type: String,
-      default: () => props$5.search.inputAlign
+      default: () => props$a.search.inputAlign
     },
     // 是否启用输入框
     disabled: {
       type: Boolean,
-      default: () => props$5.search.disabled
+      default: () => props$a.search.disabled
     },
     // 开启showAction时，是否在input获取焦点时才显示
     animation: {
       type: Boolean,
-      default: () => props$5.search.animation
+      default: () => props$a.search.animation
     },
     // 边框颜色，只要配置了颜色，才会有边框
     borderColor: {
       type: String,
-      default: () => props$5.search.borderColor
+      default: () => props$a.search.borderColor
     },
     // 搜索图标的颜色，默认同输入框字体颜色
     searchIconColor: {
       type: String,
-      default: () => props$5.search.searchIconColor
+      default: () => props$a.search.searchIconColor
     },
     // 搜索图标的大小
     searchIconSize: {
       type: [Number, String],
-      default: () => props$5.search.searchIconSize
+      default: () => props$a.search.searchIconSize
     },
     // 输入框字体颜色
     color: {
       type: String,
-      default: () => props$5.search.color
+      default: () => props$a.search.color
     },
     // placeholder的颜色
     placeholderColor: {
       type: String,
-      default: () => props$5.search.placeholderColor
+      default: () => props$a.search.placeholderColor
     },
     // 左边输入框的图标，可以为uView图标名称或图片路径
     searchIcon: {
       type: String,
-      default: () => props$5.search.searchIcon
+      default: () => props$a.search.searchIcon
     },
     // 组件与其他上下左右元素之间的距离，带单位的字符串形式，如"30px"
     margin: {
       type: String,
-      default: () => props$5.search.margin
+      default: () => props$a.search.margin
     },
     // 应该是uView-plus版本新增的，用于控制搜索图标的插槽位置
     iconPosition: {
       type: String,
-      default: () => props$5.search.iconPosition
+      default: () => props$a.search.iconPosition
     },
     // 输入框最大能输入的长度，-1为不限制长度
     maxlength: {
       type: [String, Number],
-      default: () => props$5.search.maxlength
+      default: () => props$a.search.maxlength
     },
     // 输入框高度，单位px
     height: {
       type: [String, Number],
-      default: () => props$5.search.height
+      default: () => props$a.search.height
     },
     // 键盘弹起时，是否自动上推页面
     adjustPosition: {
       type: Boolean,
-      default: () => props$5.search.adjustPosition
+      default: () => props$a.search.adjustPosition
     },
     // 键盘收起时，是否自动失去焦点
     autoBlur: {
       type: Boolean,
-      default: () => props$5.search.autoBlur
+      default: () => props$a.search.autoBlur
     },
     // 输入框的样式，对象形式
     inputStyle: {
       type: Object,
-      default: () => props$5.search.inputStyle
+      default: () => props$a.search.inputStyle
     },
     // 右侧控件的样式，对象形式
     actionStyle: {
       type: Object,
-      default: () => props$5.search.actionStyle
+      default: () => props$a.search.actionStyle
     },
     // 自定义样式，对象形式
     customStyle: {
       type: Object,
-      default: () => props$5.search.customStyle
+      default: () => props$a.search.customStyle
     }
   }
 });
-const props$3 = defineMixin({
+const props$8 = defineMixin({
   props: {
     // 列表数组，元素可为字符串，如为对象可通过keyName指定目标属性名
     list: {
       type: Array,
-      default: () => props$5.swiper.list
+      default: () => props$a.swiper.list
     },
     // 是否显示面板指示器
     indicator: {
       type: Boolean,
-      default: () => props$5.swiper.indicator
+      default: () => props$a.swiper.indicator
     },
     // 指示器非激活颜色
     indicatorActiveColor: {
       type: String,
-      default: () => props$5.swiper.indicatorActiveColor
+      default: () => props$a.swiper.indicatorActiveColor
     },
     // 指示器的激活颜色
     indicatorInactiveColor: {
       type: String,
-      default: () => props$5.swiper.indicatorInactiveColor
+      default: () => props$a.swiper.indicatorInactiveColor
     },
     // 指示器样式，可通过bottom，left，right进行定位
     indicatorStyle: {
       type: [String, Object],
-      default: () => props$5.swiper.indicatorStyle
+      default: () => props$a.swiper.indicatorStyle
     },
     // 指示器模式，line-线型，dot-点型
     indicatorMode: {
       type: String,
-      default: () => props$5.swiper.indicatorMode
+      default: () => props$a.swiper.indicatorMode
     },
     // 是否自动切换
     autoplay: {
       type: Boolean,
-      default: () => props$5.swiper.autoplay
+      default: () => props$a.swiper.autoplay
     },
     // 当前所在滑块的 index
     current: {
       type: [String, Number],
-      default: () => props$5.swiper.current
+      default: () => props$a.swiper.current
     },
     // 当前所在滑块的 item-id ，不能与 current 被同时指定
     currentItemId: {
       type: String,
-      default: () => props$5.swiper.currentItemId
+      default: () => props$a.swiper.currentItemId
     },
     // 滑块自动切换时间间隔
     interval: {
       type: [String, Number],
-      default: () => props$5.swiper.interval
+      default: () => props$a.swiper.interval
     },
     // 滑块切换过程所需时间
     duration: {
       type: [String, Number],
-      default: () => props$5.swiper.duration
+      default: () => props$a.swiper.duration
     },
     // 播放到末尾后是否重新回到开头
     circular: {
       type: Boolean,
-      default: () => props$5.swiper.circular
+      default: () => props$a.swiper.circular
     },
     // 前边距，可用于露出前一项的一小部分，nvue和支付宝不支持
     previousMargin: {
       type: [String, Number],
-      default: () => props$5.swiper.previousMargin
+      default: () => props$a.swiper.previousMargin
     },
     // 后边距，可用于露出后一项的一小部分，nvue和支付宝不支持
     nextMargin: {
       type: [String, Number],
-      default: () => props$5.swiper.nextMargin
+      default: () => props$a.swiper.nextMargin
     },
     // 当开启时，会根据滑动速度，连续滑动多屏，支付宝不支持
     acceleration: {
       type: Boolean,
-      default: () => props$5.swiper.acceleration
+      default: () => props$a.swiper.acceleration
     },
     // 同时显示的滑块数量，nvue、支付宝小程序不支持
     displayMultipleItems: {
       type: Number,
-      default: () => props$5.swiper.displayMultipleItems
+      default: () => props$a.swiper.displayMultipleItems
     },
     // 指定swiper切换缓动动画类型，有效值：default、linear、easeInCubic、easeOutCubic、easeInOutCubic
     // 只对微信小程序有效
     easingFunction: {
       type: String,
-      default: () => props$5.swiper.easingFunction
+      default: () => props$a.swiper.easingFunction
     },
     // list数组中指定对象的目标属性名
     keyName: {
       type: String,
-      default: () => props$5.swiper.keyName
+      default: () => props$a.swiper.keyName
     },
     // 图片的裁剪模式
     imgMode: {
       type: String,
-      default: () => props$5.swiper.imgMode
+      default: () => props$a.swiper.imgMode
     },
     // 组件高度
     height: {
       type: [String, Number],
-      default: () => props$5.swiper.height
+      default: () => props$a.swiper.height
     },
     // 背景颜色
     bgColor: {
       type: String,
-      default: () => props$5.swiper.bgColor
+      default: () => props$a.swiper.bgColor
     },
     // 组件圆角，数值或带单位的字符串
     radius: {
       type: [String, Number],
-      default: () => props$5.swiper.radius
+      default: () => props$a.swiper.radius
     },
     // 是否加载中
     loading: {
       type: Boolean,
-      default: () => props$5.swiper.loading
+      default: () => props$a.swiper.loading
     },
     // 是否显示标题，要求数组对象中有title属性
     showTitle: {
       type: Boolean,
-      default: () => props$5.swiper.showTitle
+      default: () => props$a.swiper.showTitle
+    }
+  }
+});
+const props$7 = defineMixin({
+  props: {
+    // 滑块的移动过渡时间，单位ms
+    duration: {
+      type: Number,
+      default: () => props$a.tabs.duration
+    },
+    // tabs标签数组
+    list: {
+      type: Array,
+      default: () => props$a.tabs.list
+    },
+    // 滑块颜色
+    lineColor: {
+      type: String,
+      default: () => props$a.tabs.lineColor
+    },
+    // 菜单选择中时的样式
+    activeStyle: {
+      type: [String, Object],
+      default: () => props$a.tabs.activeStyle
+    },
+    // 菜单非选中时的样式
+    inactiveStyle: {
+      type: [String, Object],
+      default: () => props$a.tabs.inactiveStyle
+    },
+    // 滑块长度
+    lineWidth: {
+      type: [String, Number],
+      default: () => props$a.tabs.lineWidth
+    },
+    // 滑块高度
+    lineHeight: {
+      type: [String, Number],
+      default: () => props$a.tabs.lineHeight
+    },
+    // 滑块背景显示大小，当滑块背景设置为图片时使用
+    lineBgSize: {
+      type: String,
+      default: () => props$a.tabs.lineBgSize
+    },
+    // 菜单item的样式
+    itemStyle: {
+      type: [String, Object],
+      default: () => props$a.tabs.itemStyle
+    },
+    // 菜单是否可滚动
+    scrollable: {
+      type: Boolean,
+      default: () => props$a.tabs.scrollable
+    },
+    // 当前选中标签的索引
+    current: {
+      type: [Number, String],
+      default: () => props$a.tabs.current
+    },
+    // 默认读取的键名
+    keyName: {
+      type: String,
+      default: () => props$a.tabs.keyName
+    },
+    // 左侧图标样式
+    iconStyle: {
+      type: [String, Object],
+      default: () => props$a.tabs.iconStyle
+    }
+  }
+});
+const props$6 = defineMixin({
+  props: {
+    // 吸顶容器到顶部某个距离的时候，进行吸顶，在H5平台，NavigationBar为44px
+    offsetTop: {
+      type: [String, Number],
+      default: () => props$a.sticky.offsetTop
+    },
+    // 自定义导航栏的高度
+    customNavHeight: {
+      type: [String, Number],
+      default: () => props$a.sticky.customNavHeight
+    },
+    // 是否开启吸顶功能
+    disabled: {
+      type: Boolean,
+      default: () => props$a.sticky.disabled
+    },
+    // 吸顶区域的背景颜色
+    bgColor: {
+      type: String,
+      default: () => props$a.sticky.bgColor
+    },
+    // z-index值
+    zIndex: {
+      type: [String, Number],
+      default: () => props$a.sticky.zIndex
+    },
+    // 列表中的索引值
+    index: {
+      type: [String, Number],
+      default: () => props$a.sticky.index
+    }
+  }
+});
+const props$5 = defineMixin({
+  props: {
+    // 图片地址
+    src: {
+      type: String,
+      default: () => props$a.image.src
+    },
+    // 裁剪模式
+    mode: {
+      type: String,
+      default: () => props$a.image.mode
+    },
+    // 宽度，单位任意
+    width: {
+      type: [String, Number],
+      default: () => props$a.image.width
+    },
+    // 高度，单位任意
+    height: {
+      type: [String, Number],
+      default: () => props$a.image.height
+    },
+    // 图片形状，circle-圆形，square-方形
+    shape: {
+      type: String,
+      default: () => props$a.image.shape
+    },
+    // 圆角，单位任意
+    radius: {
+      type: [String, Number],
+      default: () => props$a.image.radius
+    },
+    // 是否懒加载，微信小程序、App、百度小程序、字节跳动小程序
+    lazyLoad: {
+      type: Boolean,
+      default: () => props$a.image.lazyLoad
+    },
+    // 开启长按图片显示识别微信小程序码菜单
+    showMenuByLongpress: {
+      type: Boolean,
+      default: () => props$a.image.showMenuByLongpress
+    },
+    // 加载中的图标，或者小图片
+    loadingIcon: {
+      type: String,
+      default: () => props$a.image.loadingIcon
+    },
+    // 加载失败的图标，或者小图片
+    errorIcon: {
+      type: String,
+      default: () => props$a.image.errorIcon
+    },
+    // 是否显示加载中的图标或者自定义的slot
+    showLoading: {
+      type: Boolean,
+      default: () => props$a.image.showLoading
+    },
+    // 是否显示加载错误的图标或者自定义的slot
+    showError: {
+      type: Boolean,
+      default: () => props$a.image.showError
+    },
+    // 是否需要淡入效果
+    fade: {
+      type: Boolean,
+      default: () => props$a.image.fade
+    },
+    // 只支持网络资源，只对微信小程序有效
+    webp: {
+      type: Boolean,
+      default: () => props$a.image.webp
+    },
+    // 过渡时间，单位ms
+    duration: {
+      type: [String, Number],
+      default: () => props$a.image.duration
+    },
+    // 背景颜色，用于深色页面加载图片时，为了和背景色融合
+    bgColor: {
+      type: String,
+      default: () => props$a.image.bgColor
     }
   }
 });
@@ -13016,205 +13208,377 @@ const icons = {
   "uicon-zh": "",
   "uicon-en": ""
 };
-const props$2 = defineMixin({
+const props$4 = defineMixin({
   props: {
     // 图标类名
     name: {
       type: String,
-      default: () => props$5.icon.name
+      default: () => props$a.icon.name
     },
     // 图标颜色，可接受主题色
     color: {
       type: String,
-      default: () => props$5.icon.color
+      default: () => props$a.icon.color
     },
     // 字体大小，单位px
     size: {
       type: [String, Number],
-      default: () => props$5.icon.size
+      default: () => props$a.icon.size
     },
     // 是否显示粗体
     bold: {
       type: Boolean,
-      default: () => props$5.icon.bold
+      default: () => props$a.icon.bold
     },
     // 点击图标的时候传递事件出去的index（用于区分点击了哪一个）
     index: {
       type: [String, Number],
-      default: () => props$5.icon.index
+      default: () => props$a.icon.index
     },
     // 触摸图标时的类名
     hoverClass: {
       type: String,
-      default: () => props$5.icon.hoverClass
+      default: () => props$a.icon.hoverClass
     },
     // 自定义扩展前缀，方便用户扩展自己的图标库
     customPrefix: {
       type: String,
-      default: () => props$5.icon.customPrefix
+      default: () => props$a.icon.customPrefix
     },
     // 图标右边或者下面的文字
     label: {
       type: [String, Number],
-      default: () => props$5.icon.label
+      default: () => props$a.icon.label
     },
     // label的位置，只能右边或者下边
     labelPos: {
       type: String,
-      default: () => props$5.icon.labelPos
+      default: () => props$a.icon.labelPos
     },
     // label的大小
     labelSize: {
       type: [String, Number],
-      default: () => props$5.icon.labelSize
+      default: () => props$a.icon.labelSize
     },
     // label的颜色
     labelColor: {
       type: String,
-      default: () => props$5.icon.labelColor
+      default: () => props$a.icon.labelColor
     },
     // label与图标的距离
     space: {
       type: [String, Number],
-      default: () => props$5.icon.space
+      default: () => props$a.icon.space
     },
     // 图片的mode
     imgMode: {
       type: String,
-      default: () => props$5.icon.imgMode
+      default: () => props$a.icon.imgMode
     },
     // 用于显示图片小图标时，图片的宽度
     width: {
       type: [String, Number],
-      default: () => props$5.icon.width
+      default: () => props$a.icon.width
     },
     // 用于显示图片小图标时，图片的高度
     height: {
       type: [String, Number],
-      default: () => props$5.icon.height
+      default: () => props$a.icon.height
     },
     // 用于解决某些情况下，让图标垂直居中的用途
     top: {
       type: [String, Number],
-      default: () => props$5.icon.top
+      default: () => props$a.icon.top
     },
     // 是否阻止事件传播
     stop: {
       type: Boolean,
-      default: () => props$5.icon.stop
+      default: () => props$a.icon.stop
+    }
+  }
+});
+const props$3 = defineMixin({
+  props: {
+    // 是否显示组件
+    show: {
+      type: Boolean,
+      default: () => props$a.loadingIcon.show
+    },
+    // 颜色
+    color: {
+      type: String,
+      default: () => props$a.loadingIcon.color
+    },
+    // 提示文字颜色
+    textColor: {
+      type: String,
+      default: () => props$a.loadingIcon.textColor
+    },
+    // 文字和图标是否垂直排列
+    vertical: {
+      type: Boolean,
+      default: () => props$a.loadingIcon.vertical
+    },
+    // 模式选择，circle-圆形，spinner-花朵形，semicircle-半圆形
+    mode: {
+      type: String,
+      default: () => props$a.loadingIcon.mode
+    },
+    // 图标大小，单位默认px
+    size: {
+      type: [String, Number],
+      default: () => props$a.loadingIcon.size
+    },
+    // 文字大小
+    textSize: {
+      type: [String, Number],
+      default: () => props$a.loadingIcon.textSize
+    },
+    // 文字内容
+    text: {
+      type: [String, Number],
+      default: () => props$a.loadingIcon.text
+    },
+    // 动画模式
+    timingFunction: {
+      type: String,
+      default: () => props$a.loadingIcon.timingFunction
+    },
+    // 动画执行周期时间
+    duration: {
+      type: [String, Number],
+      default: () => props$a.loadingIcon.duration
+    },
+    // mode=circle时的暗边颜色
+    inactiveColor: {
+      type: String,
+      default: () => props$a.loadingIcon.inactiveColor
+    }
+  }
+});
+const props$2 = defineMixin({
+  props: {
+    // 轮播的长度
+    length: {
+      type: [String, Number],
+      default: () => props$a.swiperIndicator.length
+    },
+    // 当前处于活动状态的轮播的索引
+    current: {
+      type: [String, Number],
+      default: () => props$a.swiperIndicator.current
+    },
+    // 指示器非激活颜色
+    indicatorActiveColor: {
+      type: String,
+      default: () => props$a.swiperIndicator.indicatorActiveColor
+    },
+    // 指示器的激活颜色
+    indicatorInactiveColor: {
+      type: String,
+      default: () => props$a.swiperIndicator.indicatorInactiveColor
+    },
+    // 指示器模式，line-线型，dot-点型
+    indicatorMode: {
+      type: String,
+      default: () => props$a.swiperIndicator.indicatorMode
     }
   }
 });
 const props$1 = defineMixin({
   props: {
-    // 是否显示组件
+    // 是否显示圆点
+    isDot: {
+      type: Boolean,
+      default: () => props$a.badge.isDot
+    },
+    // 显示的内容
+    value: {
+      type: [Number, String],
+      default: () => props$a.badge.value
+    },
+    // 显示的内容
+    modelValue: {
+      type: [Number, String],
+      default: () => props$a.badge.modelValue
+    },
+    // 是否显示
     show: {
       type: Boolean,
-      default: () => props$5.loadingIcon.show
+      default: () => props$a.badge.show
     },
-    // 颜色
-    color: {
+    // 最大值，超过最大值会显示 '{max}+'
+    max: {
+      type: [Number, String],
+      default: () => props$a.badge.max
+    },
+    // 主题类型，error|warning|success|primary
+    type: {
       type: String,
-      default: () => props$5.loadingIcon.color
+      default: () => props$a.badge.type
     },
-    // 提示文字颜色
-    textColor: {
-      type: String,
-      default: () => props$5.loadingIcon.textColor
-    },
-    // 文字和图标是否垂直排列
-    vertical: {
+    // 当数值为 0 时，是否展示 Badge
+    showZero: {
       type: Boolean,
-      default: () => props$5.loadingIcon.vertical
+      default: () => props$a.badge.showZero
     },
-    // 模式选择，circle-圆形，spinner-花朵形，semicircle-半圆形
-    mode: {
+    // 背景颜色，优先级比type高，如设置，type参数会失效
+    bgColor: {
+      type: [String, null],
+      default: () => props$a.badge.bgColor
+    },
+    // 字体颜色
+    color: {
+      type: [String, null],
+      default: () => props$a.badge.color
+    },
+    // 徽标形状，circle-四角均为圆角，horn-左下角为直角
+    shape: {
       type: String,
-      default: () => props$5.loadingIcon.mode
+      default: () => props$a.badge.shape
     },
-    // 图标大小，单位默认px
-    size: {
-      type: [String, Number],
-      default: () => props$5.loadingIcon.size
-    },
-    // 文字大小
-    textSize: {
-      type: [String, Number],
-      default: () => props$5.loadingIcon.textSize
-    },
-    // 文字内容
-    text: {
-      type: [String, Number],
-      default: () => props$5.loadingIcon.text
-    },
-    // 动画模式
-    timingFunction: {
+    // 设置数字的显示方式，overflow|ellipsis|limit
+    // overflow会根据max字段判断，超出显示`${max}+`
+    // ellipsis会根据max判断，超出显示`${max}...`
+    // limit会依据1000作为判断条件，超出1000，显示`${value/1000}K`，比如2.2k、3.34w，最多保留2位小数
+    numberType: {
       type: String,
-      default: () => props$5.loadingIcon.timingFunction
+      default: () => props$a.badge.numberType
     },
-    // 动画执行周期时间
-    duration: {
-      type: [String, Number],
-      default: () => props$5.loadingIcon.duration
+    // 设置badge的位置偏移，格式为 [x, y]，也即设置的为top和right的值，absolute为true时有效
+    offset: {
+      type: Array,
+      default: () => props$a.badge.offset
     },
-    // mode=circle时的暗边颜色
-    inactiveColor: {
-      type: String,
-      default: () => props$5.loadingIcon.inactiveColor
+    // 是否反转背景和字体颜色
+    inverted: {
+      type: Boolean,
+      default: () => props$a.badge.inverted
+    },
+    // 是否绝对定位
+    absolute: {
+      type: Boolean,
+      default: () => props$a.badge.absolute
     }
   }
 });
 const props = defineMixin({
   props: {
-    // 轮播的长度
-    length: {
+    // 是否展示组件
+    show: {
+      type: Boolean,
+      default: () => props$a.transition.show
+    },
+    // 使用的动画模式
+    mode: {
+      type: String,
+      default: () => props$a.transition.mode
+    },
+    // 动画的执行时间，单位ms
+    duration: {
       type: [String, Number],
-      default: () => props$5.swiperIndicator.length
+      default: () => props$a.transition.duration
     },
-    // 当前处于活动状态的轮播的索引
-    current: {
-      type: [String, Number],
-      default: () => props$5.swiperIndicator.current
-    },
-    // 指示器非激活颜色
-    indicatorActiveColor: {
+    // 使用的动画过渡函数
+    timingFunction: {
       type: String,
-      default: () => props$5.swiperIndicator.indicatorActiveColor
-    },
-    // 指示器的激活颜色
-    indicatorInactiveColor: {
-      type: String,
-      default: () => props$5.swiperIndicator.indicatorInactiveColor
-    },
-    // 指示器模式，line-线型，dot-点型
-    indicatorMode: {
-      type: String,
-      default: () => props$5.swiperIndicator.indicatorMode
+      default: () => props$a.transition.timingFunction
     }
   }
 });
+const getClassNames = (name) => ({
+  enter: `u-${name}-enter u-${name}-enter-active`,
+  "enter-to": `u-${name}-enter-to u-${name}-enter-active`,
+  leave: `u-${name}-leave u-${name}-leave-active`,
+  "leave-to": `u-${name}-leave-to u-${name}-leave-active`
+});
+const transitionMixin = {
+  methods: {
+    // 组件被点击发出事件
+    clickHandler() {
+      this.$emit("click");
+    },
+    // vue版本的组件进场处理
+    async vueEnter() {
+      const classNames = getClassNames(this.mode);
+      this.status = "enter";
+      this.$emit("beforeEnter");
+      this.inited = true;
+      this.display = true;
+      this.classes = classNames.enter;
+      await nextTick$1();
+      {
+        await sleep(20);
+        this.$emit("enter");
+        this.transitionEnded = false;
+        this.$emit("afterEnter");
+        this.classes = classNames["enter-to"];
+      }
+    },
+    // 动画离场处理
+    async vueLeave() {
+      if (!this.display)
+        return;
+      const classNames = getClassNames(this.mode);
+      this.status = "leave";
+      this.$emit("beforeLeave");
+      this.classes = classNames.leave;
+      await nextTick$1();
+      {
+        this.transitionEnded = false;
+        this.$emit("leave");
+        setTimeout(this.onTransitionEnd, this.duration);
+        this.classes = classNames["leave-to"];
+      }
+    },
+    // 完成过渡后触发
+    onTransitionEnd() {
+      if (this.transitionEnded)
+        return;
+      this.transitionEnded = true;
+      this.$emit(this.status === "leave" ? "afterLeave" : "afterEnter");
+      if (!this.show && this.display) {
+        this.display = false;
+        this.inited = false;
+      }
+    }
+  }
+};
 exports._export_sfc = _export_sfc;
 exports.addStyle = addStyle;
 exports.addUnit = addUnit;
 exports.colorGradient = colorGradient;
 exports.config = config;
 exports.createSSRApp = createSSRApp;
+exports.deepMerge = deepMerge$1;
 exports.e = e;
 exports.error = error;
 exports.f = f;
 exports.fontUtil = fontUtil;
+exports.getDeviceInfo = getDeviceInfo;
+exports.getPx = getPx;
+exports.getWindowInfo = getWindowInfo;
+exports.guid = guid;
 exports.icons = icons;
 exports.index = index$1;
 exports.mixin = mixin;
 exports.mpMixin = mpMixin;
 exports.n = n;
 exports.o = o;
+exports.onMounted = onMounted;
+exports.os = os;
 exports.p = p;
-exports.props = props$4;
-exports.props$1 = props$3;
-exports.props$2 = props$2;
-exports.props$3 = props$1;
-exports.props$4 = props;
+exports.props = props$9;
+exports.props$1 = props$8;
+exports.props$10 = props;
+exports.props$2 = props$7;
+exports.props$3 = props$a;
+exports.props$4 = props$6;
+exports.props$5 = props$5;
+exports.props$6 = props$4;
+exports.props$7 = props$3;
+exports.props$8 = props$2;
+exports.props$9 = props$1;
 exports.r = r;
 exports.reactive = reactive;
 exports.ref = ref;
@@ -13224,7 +13588,9 @@ exports.sleep = sleep;
 exports.sr = sr;
 exports.t = t$1;
 exports.test = test;
+exports.transitionMixin = transitionMixin;
 exports.uviewPlus = uviewPlus;
 exports.w = w;
 exports.wx$1 = wx$1;
+exports.zIndex = zIndex;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

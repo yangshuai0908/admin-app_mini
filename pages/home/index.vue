@@ -72,7 +72,8 @@
 <script setup>
 import {
 	ref,
-	reactive
+	reactive,
+	onMounted
 } from 'vue';
 // 自定义导航栏高度
 const systemInfo = wx.getSystemInfoSync();
@@ -84,6 +85,7 @@ const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - sy
 const currentAddress = ref('定位中...');
 // 搜索
 const keyword = ref();
+
 // 轮播图
 const list = reactive([
 	'/static/swiper/swiper(1).png',
@@ -182,6 +184,10 @@ const leftList = ref([
 ]);;
 const categoryClick = (id) => {
 	console.log('点击分类:', id)
+	// 跳转到商品页面并传递分类ID
+	uni.navigateTo({
+		url: `/pages/goods/index?categoryId=${id}`
+	})
 }
 // 热门推荐
 const recommendList = ref([
@@ -273,64 +279,50 @@ const flowList = ref([
 		price: '35'
 	}
 ]);
-
-
-// 获取用户位置
-const getUserLocation = () => {
-	uni.authorize({
-		scope: 'scope.userLocation',
-		success: () => {
-			uni.getLocation({
-				type: 'gcj02', // 返回国测局坐标（国内标准）
-				success: (res) => {
-					console.log('定位成功:', res);
-					this.latitude = res.latitude;
-					this.longitude = res.longitude;
-
-					// 使用 uni-app 内置逆地理编码（免费！）
-					this.reverseGeocode(res.latitude, res.longitude);
-				},
-				fail: (err) => {
-					console.error('定位失败:', err);
-					this.currentAddress = '定位失败';
-				}
-			});
-		},
-		fail: () => {
-			// 用户拒绝授权
-			this.showAuthModal();
-		}
-	});
-}
-// 逆地理编码：经纬度 → 地址（uni-app 内置）
-reverseGeocode(lat, lng) {
-	uni.request({
-		url: `https://apis.map.qq.com/ws/geocoder/v1/`,
-		data: {
-			location: `${lat},${lng}`,
-			key: 'YOUR_TENCENT_KEY', // 需要申请（见下方说明）
-			output: 'json'
-		},
+// 定位
+const getLocation = () => {
+	uni.getLocation({
+		type: 'wgs84',
 		success: (res) => {
-			if (res.data.status === 0) {
-				// 推荐地址（最详细）
-				this.currentAddress = res.data.result.formatted_addresses.recommend || '未知位置';
-			} else {
-				this.currentAddress = '获取地址失败';
-			}
+			console.log('获取位置成功:', res)
+			currentAddress.value = res.address
 		},
-		fail: () => {
-			this.currentAddress = '网络错误';
+		fail: (err) => {
+			console.log('获取位置失败:', err)
+			// 拒绝授权
+			if (err.errMsg.includes('auth deny') || err.errMsg.includes('unauthorized')) {
+				handleAuthDeny()
+			} else {
+				err = '定位失败，请稍后重试';
+			}
 		}
-	});
-},
-
-
+	})
+}
+const handleAuthDeny = () => {
+	uni.showModal({
+		title: '提示',
+		content: '请允许小程序获取您的位置信息',
+		success: (res) => {
+			if (res.confirm) {
+				uni.openSetting({
+					success: (res) => {
+						console.log('打开设置成功:', res)
+					},
+					fail: (err) => {
+						console.log('打开设置失败:', err)
+					}
+				})
+			}
+		}
+	})
+}
+onMounted(() => {
+	getLocation()
+})
 </script>
 
 <style lang="scss" scoped>
 .tabbar-container {
-
 	// 定位
 	.location {
 		display: flex;

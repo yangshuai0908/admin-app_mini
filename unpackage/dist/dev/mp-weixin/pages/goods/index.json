@@ -1,4 +1,9 @@
 {
   "navigationBarTitleText": "分类",
-  "usingComponents": {}
+  "usingComponents": {
+    "up-search": "../../node-modules/uview-plus/components/u-search/u-search",
+    "up-tabs": "../../node-modules/uview-plus/components/u-tabs/u-tabs",
+    "up-sticky": "../../node-modules/uview-plus/components/u-sticky/u-sticky",
+    "up-image": "../../node-modules/uview-plus/components/u-image/u-image"
+  }
 }
