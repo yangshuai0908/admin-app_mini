@@ -18,8 +18,8 @@ const _sfc_main = {
   setup(__props) {
     const systemInfo = common_vendor.wx$1.getSystemInfoSync();
     const menuButtonInfo = common_vendor.wx$1.getMenuButtonBoundingClientRect();
-    common_vendor.index.__f__("log", "at pages/home/index.vue:70", systemInfo.statusBarHeight, "状态栏的高度");
-    common_vendor.index.__f__("log", "at pages/home/index.vue:71", menuButtonInfo.top - systemInfo.statusBarHeight, "胶囊顶部到状态栏的高度");
+    common_vendor.index.__f__("log", "at pages/home/index.vue:80", systemInfo.statusBarHeight, "状态栏的高度");
+    common_vendor.index.__f__("log", "at pages/home/index.vue:81", menuButtonInfo.top - systemInfo.statusBarHeight, "胶囊顶部到状态栏的高度");
     const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight);
     const keyword = common_vendor.ref();
     const list = common_vendor.reactive([
@@ -72,8 +72,46 @@ const _sfc_main = {
         icon: "../../static/aquarium.png"
       }
     ]);
+    common_vendor.ref([
+      {
+        id: 1,
+        image: "../../static/goods/热门(1).png",
+        title: "皇家幼犬狗粮",
+        price: "168"
+      },
+      {
+        id: 2,
+        image: "../../static/goods/热门(2).png",
+        title: "喵星人猫粮",
+        price: "199"
+      },
+      {
+        id: 3,
+        image: "../../static/goods/热门(3).png",
+        title: "鸡肉干零食",
+        price: "58"
+      },
+      {
+        id: 4,
+        image: "../../static/goods/热门(1).png",
+        title: "金毛犬狗粮",
+        price: "168"
+      },
+      {
+        id: 5,
+        image: "../../static/goods/热门(2).png",
+        title: "英短猫粮",
+        price: "220"
+      },
+      {
+        id: 6,
+        image: "../../static/goods/热门(3).png",
+        title: "牛肉咬胶",
+        price: "35"
+      }
+    ]);
     const categoryClick = (id) => {
-      common_vendor.index.__f__("log", "at pages/home/index.vue:133", "点击分类:", id);
+      common_vendor.index.__f__("log", "at pages/home/index.vue:183", "点击分类:", id);
     };
     const recommendList = common_vendor.ref([
       {
@@ -110,6 +148,56 @@ const _sfc_main = {
         title: "金毛犬狗粮",
         subtitle: "营养均衡配方",
         price: "168"
+      }
+    ]);
+    const flowList = common_vendor.ref([
+      {
+        id: 1,
+        image: "../../static/goods/热门(29).png",
+        title: "皇家幼犬狗粮",
+        sales: "1.2万",
+        tag: "新品",
+        price: "168"
+      },
+      {
+        id: 2,
+        image: "../../static/goods/热门(30).png",
+        title: "喵星人猫粮",
+        sales: "1.2万",
+        tag: "新品",
+        price: "199"
+      },
+      {
+        id: 3,
+        image: "../../static/goods/热门(3).png",
+        title: "鸡肉干零食",
+        sales: "1.2万",
+        tag: "热销",
+        price: "58"
+      },
+      {
+        id: 4,
+        image: "../../static/goods/热门(1).png",
+        title: "金毛犬狗粮",
+        sales: "1.2万",
+        tag: "热销",
+        price: "168"
+      },
+      {
+        id: 5,
+        image: "../../static/goods/热门(2).png",
+        title: "英短猫粮",
+        sales: "1.2万",
+        tag: "新品",
+        price: "220"
+      },
+      {
+        id: 6,
+        image: "../../static/goods/热门(3).png",
+        title: "牛肉咬胶",
+        sales: "1.2万",
+        tag: "爆品",
+        price: "35"
       }
     ]);
     return (_ctx, _cache) => {
@@ -156,7 +244,11 @@ const _sfc_main = {
           return {
             a: common_vendor.f(colList, (item, index, i1) => {
               return {
-                a: index
+                a: item.image,
+                b: common_vendor.t(item.title),
+                c: common_vendor.t(item.sales),
+                d: common_vendor.t(item.price),
+                e: index
               };
             }),
             b: i0,
@@ -167,13 +259,14 @@ const _sfc_main = {
           path: "h",
           vueId: "4978fed5-2"
         }),
-        i: common_assets._imports_2,
-        j: common_vendor.o(($event) => _ctx.flowList = $event),
-        k: common_vendor.p({
+        i: common_assets._imports_1,
+        j: common_vendor.sr("waterfall", "4978fed5-2"),
+        k: common_vendor.o(($event) => flowList.value = $event),
+        l: common_vendor.p({
           columns: "2",
-          modelValue: _ctx.flowList
+          modelValue: flowList.value
         }),
-        l: customNavBarHeight + "px"
+        m: customNavBarHeight + "px"
       };
     };
   }

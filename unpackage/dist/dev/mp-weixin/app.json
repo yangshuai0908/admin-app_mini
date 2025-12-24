@@ -43,5 +43,10 @@
       }
     ]
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于获取您的位置，以便为您推荐附近的宠物门店和配送服务"
+    }
+  },
   "usingComponents": {}
 }

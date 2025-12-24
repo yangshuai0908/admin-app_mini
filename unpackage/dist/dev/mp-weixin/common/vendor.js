@@ -5280,6 +5280,10 @@ function createScopedSlotInvoker(instance) {
   invoker.slots = {};
   return invoker;
 }
+function setRef(ref2, id, opts = {}) {
+  const { $templateRefs } = getCurrentInstance();
+  $templateRefs.push({ i: id, r: ref2, k: opts.k, f: opts.f });
+}
 const o = (value, key) => vOn(value, key);
 const f = (source, renderItem) => vFor(source, renderItem);
 const r = (name, props2, key) => renderSlot(name, props2, key);
@@ -5289,6 +5293,7 @@ const e = (target, ...sources) => extend(target, ...sources);
 const n = (value) => normalizeClass(value);
 const t$1 = (val) => toDisplayString(val);
 const p = (props2) => renderProps(props2);
+const sr = (ref2, id, opts) => setRef(ref2, id, opts);
 function createApp$1(rootComponent, rootProps = null) {
   rootComponent && (rootComponent.mpType = "app");
   return createVueApp(rootComponent, rootProps).use(plugin);
@@ -13216,6 +13221,7 @@ exports.ref = ref;
 exports.resolveComponent = resolveComponent;
 exports.s = s;
 exports.sleep = sleep;
+exports.sr = sr;
 exports.t = t$1;
 exports.test = test;
 exports.uviewPlus = uviewPlus;

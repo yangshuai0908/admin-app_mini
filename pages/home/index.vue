@@ -3,7 +3,7 @@
 		<!-- 定位 -->
 		<view class="location">
 			<img src="../../static/location.png" alt="定位" srcset="" class="location-icon" />
-			<span class="location-text">北京市朝阳区三里屯 SOHO</span>
+			<span class="location-text">{{ currentAddress }}</span>
 		</view>
 		<!-- 搜索 -->
 		<view class="search">
@@ -47,11 +47,21 @@
 		</view>
 		<!-- 瀑布流 -->
 		<view class="waterfall">
-			<up-waterfall v-model="flowList" columns="2">
+			<up-waterfall v-model="flowList" ref="waterfall" columns="2">
 				<template v-slot:column="{ colList, colIndex }">
-					<view v-for="(item, index) in colList" :key="index">
-						<!-- 这里编写您的内容，item为您传递给v-model的数组元素 -->
-						 <img src="../../static/goods/热门(29).png" alt="">
+					<view v-for="(item, index) in colList" :key="index" class="waterfall-item">
+						<image :src="item.image" mode="widthFix" class="waterfall-image"></image>
+						<view class="waterfall-tag">热品</view>
+						<view class="waterfall-info">
+							<text class="waterfall-title">{{ item.title }}</text>
+							<text class="waterfall-sales">销量 {{ item.sales }}</text>
+							<view class="waterfall-bottom">
+								<text class="waterfall-price">￥{{ item.price }}</text>
+								<view class="waterfall-item-add">
+									<img src="../../static/goods/add.png" alt="" srcset="" class="waterfall-item-icon">
+								</view>
+							</view>
+						</view>
 					</view>
 				</template>
 			</up-waterfall>
@@ -70,7 +80,8 @@ const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
 console.log(systemInfo.statusBarHeight, '状态栏的高度');
 console.log(menuButtonInfo.top - systemInfo.statusBarHeight, '胶囊顶部到状态栏的高度');
 const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight)
-
+// 定位
+const currentAddress = ref('定位中...');
 // 搜索
 const keyword = ref();
 // 轮播图
@@ -128,7 +139,47 @@ const categoryList = ref([
 		name: '水族专区',
 		icon: '../../static/aquarium.png',
 	}
-]);
+])
+
+// 瀑布流数据
+const leftList = ref([
+	{
+		id: 1,
+		image: '../../static/goods/热门(1).png',
+		title: '皇家幼犬狗粮',
+		price: '168'
+	},
+	{
+		id: 2,
+		image: '../../static/goods/热门(2).png',
+		title: '喵星人猫粮',
+		price: '199'
+	},
+	{
+		id: 3,
+		image: '../../static/goods/热门(3).png',
+		title: '鸡肉干零食',
+		price: '58'
+	},
+	{
+		id: 4,
+		image: '../../static/goods/热门(1).png',
+		title: '金毛犬狗粮',
+		price: '168'
+	},
+	{
+		id: 5,
+		image: '../../static/goods/热门(2).png',
+		title: '英短猫粮',
+		price: '220'
+	},
+	{
+		id: 6,
+		image: '../../static/goods/热门(3).png',
+		title: '牛肉咬胶',
+		price: '35'
+	}
+]);;
 const categoryClick = (id) => {
 	console.log('点击分类:', id)
 }
@@ -170,6 +221,111 @@ const recommendList = ref([
 		price: '168',
 	}
 ])
+
+// 瀑布流数据
+const flowList = ref([
+	{
+		id: 1,
+		image: '../../static/goods/热门(29).png',
+		title: '皇家幼犬狗粮',
+		sales: '1.2万',
+		tag: '新品',
+		price: '168'
+	},
+	{
+		id: 2,
+		image: '../../static/goods/热门(30).png',
+		title: '喵星人猫粮',
+		sales: '1.2万',
+		tag: '新品',
+		price: '199'
+	},
+	{
+		id: 3,
+		image: '../../static/goods/热门(3).png',
+		title: '鸡肉干零食',
+		sales: '1.2万',
+		tag: '热销',
+		price: '58'
+	},
+	{
+		id: 4,
+		image: '../../static/goods/热门(1).png',
+		title: '金毛犬狗粮',
+		sales: '1.2万',
+		tag: '热销',
+		price: '168'
+	},
+	{
+		id: 5,
+		image: '../../static/goods/热门(2).png',
+		title: '英短猫粮',
+		sales: '1.2万',
+		tag: '新品',
+		price: '220'
+	},
+	{
+		id: 6,
+		image: '../../static/goods/热门(3).png',
+		title: '牛肉咬胶',
+		sales: '1.2万',
+		tag: '爆品',
+		price: '35'
+	}
+]);
+
+
+// 获取用户位置
+const getUserLocation = () => {
+	uni.authorize({
+		scope: 'scope.userLocation',
+		success: () => {
+			uni.getLocation({
+				type: 'gcj02', // 返回国测局坐标（国内标准）
+				success: (res) => {
+					console.log('定位成功:', res);
+					this.latitude = res.latitude;
+					this.longitude = res.longitude;
+
+					// 使用 uni-app 内置逆地理编码（免费！）
+					this.reverseGeocode(res.latitude, res.longitude);
+				},
+				fail: (err) => {
+					console.error('定位失败:', err);
+					this.currentAddress = '定位失败';
+				}
+			});
+		},
+		fail: () => {
+			// 用户拒绝授权
+			this.showAuthModal();
+		}
+	});
+}
+// 逆地理编码：经纬度 → 地址（uni-app 内置）
+reverseGeocode(lat, lng) {
+	uni.request({
+		url: `https://apis.map.qq.com/ws/geocoder/v1/`,
+		data: {
+			location: `${lat},${lng}`,
+			key: 'YOUR_TENCENT_KEY', // 需要申请（见下方说明）
+			output: 'json'
+		},
+		success: (res) => {
+			if (res.data.status === 0) {
+				// 推荐地址（最详细）
+				this.currentAddress = res.data.result.formatted_addresses.recommend || '未知位置';
+			} else {
+				this.currentAddress = '获取地址失败';
+			}
+		},
+		fail: () => {
+			this.currentAddress = '网络错误';
+		}
+	});
+},
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -317,6 +473,87 @@ const recommendList = ref([
 						}
 					}
 				}
+			}
+		}
+	}
+
+	// 瀑布流
+	.waterfall {
+		padding: 0 16px;
+
+		.waterfall-item {
+			width: calc((100vw - 48px) / 2);
+			background: #fff;
+			border-radius: 8px;
+			margin-bottom: 16px;
+			overflow: hidden;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			position: relative;
+
+			.waterfall-image {
+				width: 100%;
+				border-radius: 8px 8px 0 0;
+			}
+
+			.waterfall-tag {
+				position: absolute;
+				top: 8px;
+				right: 8px;
+				background: #fcede7;
+				color: #FF6B35;
+				font-size: 12px;
+				padding: 4px 8px;
+				border-radius: 20px;
+				width: 40px;
+				height: 24px;
+				display: flex;
+				font-weight: 500;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.waterfall-info {
+				padding: 12px;
+
+				.waterfall-title {
+					font-size: 14px;
+					color: #333;
+					font-weight: 600;
+					display: block;
+					margin-bottom: 4px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+
+				.waterfall-sales {
+					font-size: 12px;
+					color: #6B7280;
+					font-weight: 600;
+					display: block;
+				}
+
+				.waterfall-price {
+					font-size: 16px;
+					color: #FF6B35;
+					font-weight: 700;
+					display: block;
+				}
+
+				.waterfall-bottom {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-top: 4px;
+
+					.waterfall-item-add {
+						.waterfall-item-icon {
+							width: 24px;
+							height: 24px;
+						}
+					}
+				}
+
 			}
 		}
 	}

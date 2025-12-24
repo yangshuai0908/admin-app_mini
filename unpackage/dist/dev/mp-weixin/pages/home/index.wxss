@@ -141,3 +141,70 @@
   width: 24px;
   height: 24px;
 }
+.tabbar-container .waterfall.data-v-4978fed5 {
+  padding: 0 16px;
+}
+.tabbar-container .waterfall .waterfall-item.data-v-4978fed5 {
+  width: calc((100vw - 48px) / 2);
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+.tabbar-container .waterfall .waterfall-item .waterfall-image.data-v-4978fed5 {
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+}
+.tabbar-container .waterfall .waterfall-item .waterfall-tag.data-v-4978fed5 {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #fcede7;
+  color: #FF6B35;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  width: 40px;
+  height: 24px;
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  justify-content: center;
+}
+.tabbar-container .waterfall .waterfall-item .waterfall-info.data-v-4978fed5 {
+  padding: 12px;
+}
+.tabbar-container .waterfall .waterfall-item .waterfall-info .waterfall-title.data-v-4978fed5 {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tabbar-container .waterfall .waterfall-item .waterfall-info .waterfall-sales.data-v-4978fed5 {
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 600;
+  display: block;
+}
+.tabbar-container .waterfall .waterfall-item .waterfall-info .waterfall-price.data-v-4978fed5 {
+  font-size: 16px;
+  color: #FF6B35;
+  font-weight: 700;
+  display: block;
+}
+.tabbar-container .waterfall .waterfall-item .waterfall-info .waterfall-bottom.data-v-4978fed5 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+.tabbar-container .waterfall .waterfall-item .waterfall-info .waterfall-bottom .waterfall-item-add .waterfall-item-icon.data-v-4978fed5 {
+  width: 24px;
+  height: 24px;
+}
