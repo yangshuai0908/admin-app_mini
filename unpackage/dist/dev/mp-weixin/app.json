@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/goods/index",
+    "pages/news/index",
+    "pages/my/index",
+    "pages/login/index"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#FFF",
+    "backgroundColor": "#FFF"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#ff6b35",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "/static/tabbar/home.png",
+        "selectedIconPath": "/static/tabbar/home_active.png"
+      },
+      {
+        "pagePath": "pages/goods/index",
+        "text": "商品",
+        "iconPath": "/static/tabbar/goods.png",
+        "selectedIconPath": "/static/tabbar/goods_active.png"
+      },
+      {
+        "pagePath": "pages/news/index",
+        "text": "消息",
+        "iconPath": "/static/tabbar/news.png",
+        "selectedIconPath": "/static/tabbar/news_active.png"
+      },
+      {
+        "pagePath": "pages/my/index",
+        "text": "我的",
+        "iconPath": "/static/tabbar/my.png",
+        "selectedIconPath": "/static/tabbar/my_active.png"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

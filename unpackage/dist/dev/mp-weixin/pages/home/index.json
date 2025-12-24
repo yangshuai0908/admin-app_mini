@@ -1,0 +1,8 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "up-search": "../../node-modules/uview-plus/components/u-search/u-search",
+    "up-swiper": "../../node-modules/uview-plus/components/u-swiper/u-swiper",
+    "up-waterfall": "../../node-modules/uview-plus/components/u-waterfall/u-waterfall"
+  }
+}
