@@ -1,0 +1,7 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "up-empty": "../../node-modules/uview-plus/components/u-empty/u-empty",
+    "up-notice-bar": "../../node-modules/uview-plus/components/u-notice-bar/u-notice-bar"
+  }
+}

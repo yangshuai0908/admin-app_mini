@@ -1,4 +1,6 @@
 {
-  "navigationBarTitleText": "我的",
-  "usingComponents": {}
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "up-sticky": "../../node-modules/uview-plus/components/u-sticky/u-sticky"
+  }
 }

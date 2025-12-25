@@ -2,7 +2,7 @@
   "pages": [
     "pages/home/index",
     "pages/goods/index",
-    "pages/news/index",
+    "pages/cart/index",
     "pages/my/index",
     "pages/login/index"
   ],
@@ -30,8 +30,8 @@
         "selectedIconPath": "/static/tabbar/goods_active.png"
       },
       {
-        "pagePath": "pages/news/index",
-        "text": "消息",
+        "pagePath": "pages/cart/index",
+        "text": "购物车",
         "iconPath": "/static/tabbar/news.png",
         "selectedIconPath": "/static/tabbar/news_active.png"
       },

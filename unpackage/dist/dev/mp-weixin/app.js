@@ -4,7 +4,7 @@ const common_vendor = require("./common/vendor.js");
 if (!Math) {
   "./pages/home/index.js";
   "./pages/goods/index.js";
-  "./pages/news/index.js";
+  "./pages/cart/index.js";
   "./pages/my/index.js";
   "./pages/login/index.js";
 }

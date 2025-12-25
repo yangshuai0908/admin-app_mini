@@ -22,15 +22,15 @@
 			}
 		},
 		{
-			"path": "pages/news/index",
+			"path": "pages/cart/index",
 			"style": {
-				"navigationBarTitleText": "购物车"
+				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/my/index",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -50,7 +50,8 @@
 		"color": "#7A7E83",
 		"selectedColor": "#ff6b35",
 		"backgroundColor": "#FFFFFF",
-		"list": [{
+		"list": [
+			{
 				"pagePath": "pages/home/index",
 				"text": "首页",
 				"iconPath": "/static/tabbar/home.png",
@@ -63,8 +64,8 @@
 				"selectedIconPath": "/static/tabbar/goods_active.png"
 			},
 			{
-				"pagePath": "pages/news/index",
-				"text": "消息",
+				"pagePath": "pages/cart/index",
+				"text": "购物车",
 				"iconPath": "/static/tabbar/news.png",
 				"selectedIconPath": "/static/tabbar/news_active.png"
 			},
