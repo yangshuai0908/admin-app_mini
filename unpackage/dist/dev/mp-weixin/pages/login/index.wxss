@@ -45,9 +45,8 @@
   border-radius: 30rpx;
 }
 .login-header .nav-back .back-icon.data-v-d08ef7d4 {
-  font-size: 32rpx;
-  color: #fff;
-  font-weight: 600;
+  width: 32rpx;
+  height: 32rpx;
 }
 .login-header .nav-title.data-v-d08ef7d4 {
   font-size: 36rpx;
@@ -65,8 +64,9 @@
   margin-bottom: 80rpx;
 }
 .login-logo .logo-img.data-v-d08ef7d4 {
-  width: 120rpx;
-  height: 120rpx;
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 40px;
   margin-bottom: 30rpx;
 }
 .login-logo .logo-title.data-v-d08ef7d4 {
@@ -181,9 +181,6 @@
   align-items: center;
   justify-content: center;
   gap: 20rpx;
-}
-.wechat-login .wechat-btn .wechat-icon.data-v-d08ef7d4 {
-  font-size: 32rpx;
 }
 .wechat-login .wechat-btn text.data-v-d08ef7d4 {
   font-size: 32rpx;

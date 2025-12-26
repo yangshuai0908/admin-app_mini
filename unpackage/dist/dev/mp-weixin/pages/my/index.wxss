@@ -98,6 +98,11 @@
   margin-bottom: 20rpx;
   display: block;
 }
+.user-info .user-main .user-details .user-phone.login-hint.data-v-f97bc692 {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: underline;
+  cursor: pointer;
+}
 .user-info .user-main .user-details .user-level.data-v-f97bc692 {
   display: inline-block;
 }

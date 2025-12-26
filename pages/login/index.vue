@@ -3,7 +3,7 @@
 		<!-- 顶部导航栏 -->
 		<view class="login-header" :style="{ paddingTop: customNavBarHeight + 'px' }">
 			<view class="nav-back" @click="goBack">
-				<text class="back-icon">←</text>
+				<img src="../../static/arrow_logo.png" alt="" srcset="" class="back-icon" />
 			</view>
 			<text class="nav-title">登录</text>
 			<view class="nav-placeholder"></view>
@@ -77,7 +77,6 @@
 			<!-- 微信登录 -->
 			<view v-if="loginType === 'wechat'" class="wechat-login">
 				<view class="wechat-btn" @click="wechatLogin">
-					<text class="wechat-icon">🟢</text>
 					<text>微信一键登录</text>
 				</view>
 			</view>
@@ -296,9 +295,8 @@ const goBack = () => {
 		border-radius: 30rpx;
 
 		.back-icon {
-			font-size: 32rpx;
-			color: #fff;
-			font-weight: 600;
+			width: 32rpx;
+			height: 32rpx;
 		}
 	}
 
@@ -324,8 +322,9 @@ const goBack = () => {
 	margin-bottom: 80rpx;
 
 	.logo-img {
-		width: 120rpx;
-		height: 120rpx;
+		width: 140rpx;
+		height: 140rpx;
+		border-radius: 40px;
 		margin-bottom: 30rpx;
 	}
 
@@ -469,10 +468,6 @@ const goBack = () => {
 		align-items: center;
 		justify-content: center;
 		gap: 20rpx;
-
-		.wechat-icon {
-			font-size: 32rpx;
-		}
 
 		text {
 			font-size: 32rpx;

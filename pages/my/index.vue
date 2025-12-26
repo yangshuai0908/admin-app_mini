@@ -16,13 +16,14 @@
 						<img src="../../static/alter.png" alt="" srcset="" class="edit-icon-img" />
 					</view>
 				</view>
-				<view class="user-details">
-					<text class="username">{{ userInfo.nickname || '宠物爱好者' }}</text>
-					<text class="user-phone">{{ userInfo.phone || '点击登录' }}</text>
-					<view class="user-level">
-						<text class="level-text">{{ userInfo.level || '普通会员' }}</text>
-					</view>
+			<view class="user-details">
+				<text class="username">{{ userInfo.nickname || '宠物爱好者' }}</text>
+				<text v-if="!isLoggedIn" class="user-phone login-hint" @click="goToLogin">{{ userInfo.phone || '点击登录' }}</text>
+				<text v-else class="user-phone">{{ userInfo.phone }}</text>
+				<view class="user-level">
+					<text class="level-text">{{ userInfo.level || '普通会员' }}</text>
 				</view>
+			</view>
 			</view>
 			<view class="user-stats">
 				<view class="stat-item">
@@ -147,8 +148,31 @@ const otherList = ref([
 
 // 页面跳转方法
 const goToProfile = () => {
+	if (!isLoggedIn.value) {
+		goToLogin()
+		return
+	}
 	uni.navigateTo({
 		url: '/pages/my/profile'
+	})
+}
+
+const goToLogin = () => {
+	console.log('点击登录被触发，当前登录状态:', isLoggedIn.value)
+	
+	// 直接跳转，不使用toast延迟
+	uni.navigateTo({
+		url: '/pages/login/index',
+		success: () => {
+			console.log('跳转成功')
+		},
+		fail: (err) => {
+			console.log('跳转失败:', err)
+			uni.showToast({
+				title: '跳转失败',
+				icon: 'none'
+			})
+		}
 	})
 }
 
@@ -190,7 +214,15 @@ const logout = () => {
 		content: '确定要退出登录吗？',
 		success: (res) => {
 			if (res.confirm) {
-				// 清除用户信息
+				// 清除本地存储
+				try {
+					uni.removeStorageSync('isLoggedIn')
+					uni.removeStorageSync('userInfo')
+				} catch (e) {
+					console.log('清除存储失败:', e)
+				}
+
+				// 清除页面状态
 				userInfo.value = {
 					avatar: '../../static/default-avatar.png',
 					nickname: '未登录',
@@ -208,9 +240,9 @@ const logout = () => {
 					icon: 'success'
 				})
 
-				// 可以跳转到登录页面
+				// 跳转到登录页面
 				setTimeout(() => {
-					uni.navigateTo({
+					uni.reLaunch({
 						url: '/pages/login/index'
 					})
 				}, 1500)
@@ -219,10 +251,41 @@ const logout = () => {
 	})
 }
 
+// 检查登录状态
+const checkLoginStatus = () => {
+	try {
+		const isLoggedInStorage = uni.getStorageSync('isLoggedIn')
+		const userInfoStorage = uni.getStorageSync('userInfo')
+		
+		console.log('存储的登录状态:', isLoggedInStorage)
+		console.log('存储的用户信息:', userInfoStorage)
+		
+		if (isLoggedInStorage && userInfoStorage) {
+			isLoggedIn.value = true
+			userInfo.value = userInfoStorage
+			console.log('设置登录状态为true，用户信息已更新')
+		} else {
+			isLoggedIn.value = false
+			userInfo.value = {
+				avatar: '../../static/default-avatar.png',
+				nickname: '未登录',
+				phone: '点击登录',
+				level: '',
+				points: 0,
+				coupons: 0,
+				balance: '0.00'
+			}
+			console.log('设置登录状态为false，使用默认用户信息')
+		}
+	} catch (e) {
+		console.log('检查登录状态失败:', e)
+		isLoggedIn.value = false
+	}
+}
+
 onMounted(() => {
 	console.log('我的页面加载完成')
-	// 这里可以获取用户信息
-	// getUserInfo()
+	checkLoginStatus()
 })
 </script>
 
@@ -307,12 +370,18 @@ onMounted(() => {
 				display: block;
 			}
 
-			.user-phone {
-				font-size: 24rpx;
-				color: rgba(255, 255, 255, 0.8);
-				margin-bottom: 20rpx;
-				display: block;
+		.user-phone {
+			font-size: 24rpx;
+			color: rgba(255, 255, 255, 0.8);
+			margin-bottom: 20rpx;
+			display: block;
+
+			&.login-hint {
+				color: rgba(255, 255, 255, 0.9);
+				text-decoration: underline;
+				cursor: pointer;
 			}
+		}
 
 			.user-level {
 				display: inline-block;

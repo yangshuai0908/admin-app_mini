@@ -129,35 +129,36 @@ const _sfc_main = {
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
-        a: common_vendor.o(goBack),
-        b: customNavBarHeight + "px",
-        c: common_assets._imports_0$4,
-        d: loginType.value === "phone" ? 1 : "",
-        e: common_vendor.o(($event) => switchLoginType("phone")),
-        f: loginType.value === "wechat" ? 1 : "",
-        g: common_vendor.o(($event) => switchLoginType("wechat")),
-        h: loginType.value === "phone"
+        a: common_assets._imports_0$4,
+        b: common_vendor.o(goBack),
+        c: customNavBarHeight + "px",
+        d: common_assets._imports_1$1,
+        e: loginType.value === "phone" ? 1 : "",
+        f: common_vendor.o(($event) => switchLoginType("phone")),
+        g: loginType.value === "wechat" ? 1 : "",
+        h: common_vendor.o(($event) => switchLoginType("wechat")),
+        i: loginType.value === "phone"
       }, loginType.value === "phone" ? {
-        i: phone.value,
-        j: common_vendor.o(($event) => phone.value = $event.detail.value),
-        k: code.value,
-        l: common_vendor.o(($event) => code.value = $event.detail.value),
-        m: common_vendor.t(codeText.value),
-        n: !canSendCode.value ? 1 : "",
-        o: common_vendor.o(sendCode),
-        p: common_vendor.o(phoneLogin),
-        q: !canLogin.value ? 1 : ""
+        j: phone.value,
+        k: common_vendor.o(($event) => phone.value = $event.detail.value),
+        l: code.value,
+        m: common_vendor.o(($event) => code.value = $event.detail.value),
+        n: common_vendor.t(codeText.value),
+        o: !canSendCode.value ? 1 : "",
+        p: common_vendor.o(sendCode),
+        q: common_vendor.o(phoneLogin),
+        r: !canLogin.value ? 1 : ""
       } : {}, {
-        r: loginType.value === "wechat"
+        s: loginType.value === "wechat"
       }, loginType.value === "wechat" ? {
-        s: common_vendor.o(wechatLogin)
+        t: common_vendor.o(wechatLogin)
       } : {}, {
-        t: agreedToTerms.value
+        v: agreedToTerms.value
       }, agreedToTerms.value ? {} : {}, {
-        v: agreedToTerms.value ? 1 : "",
-        w: common_vendor.o(toggleAgreement),
-        x: common_vendor.o(openUserAgreement),
-        y: common_vendor.o(openPrivacyPolicy)
+        w: agreedToTerms.value ? 1 : "",
+        x: common_vendor.o(toggleAgreement),
+        y: common_vendor.o(openUserAgreement),
+        z: common_vendor.o(openPrivacyPolicy)
       });
     };
   }
