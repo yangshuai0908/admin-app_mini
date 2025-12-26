@@ -4,9 +4,9 @@ const common_assets = require("../../common/assets.js");
 const _sfc_main = {
   __name: "index",
   setup(__props) {
-    const systemInfo = common_vendor.wx$1.getSystemInfoSync();
+    const windowInfo = common_vendor.wx$1.getWindowInfo();
     const menuButtonInfo = common_vendor.wx$1.getMenuButtonBoundingClientRect();
-    const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight);
+    const customNavBarHeight = windowInfo.statusBarHeight + (menuButtonInfo.top - windowInfo.statusBarHeight);
     const loginType = common_vendor.ref("phone");
     const phone = common_vendor.ref("");
     const code = common_vendor.ref("");
@@ -129,7 +129,7 @@ const _sfc_main = {
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
-        a: common_assets._imports_0$4,
+        a: common_assets._imports_0$3,
         b: common_vendor.o(goBack),
         c: customNavBarHeight + "px",
         d: common_assets._imports_1$1,

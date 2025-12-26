@@ -110,9 +110,9 @@
 import { ref, computed, onMounted } from 'vue'
 
 // 自定义导航栏高度
-const systemInfo = wx.getSystemInfoSync()
+const windowInfo = wx.getWindowInfo()
 const menuButtonInfo = wx.getMenuButtonBoundingClientRect()
-const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight)
+const customNavBarHeight = windowInfo.statusBarHeight + (menuButtonInfo.top - windowInfo.statusBarHeight)
 
 
 const text = ref('uview-plus UI众多组件覆盖开发过程的各个需求，组件功能丰富，多端兼容。让您快速集成，开箱即用');

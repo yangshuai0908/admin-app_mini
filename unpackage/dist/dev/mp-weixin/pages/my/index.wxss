@@ -35,6 +35,13 @@
   justify-content: space-between;
   align-items: center;
 }
+.my-header.sticky.data-v-f97bc692 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
 .my-header .my-title.data-v-f97bc692 {
   font-size: 36rpx;
   font-weight: 600;

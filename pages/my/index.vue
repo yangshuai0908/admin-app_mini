@@ -1,11 +1,11 @@
 <template>
 	<view class="my-container">
-		<up-sticky>
+		<!-- <up-sticky> -->
 			<!-- 顶部导航栏 -->
 			<view class="my-header" :style="{ paddingTop: customNavBarHeight + 'px' }">
 				<text class="my-title">我的</text>
 			</view>
-		</up-sticky>
+		<!-- </up-sticky> -->
 
 		<!-- 用户信息区域 -->
 		<view class="user-info">
@@ -16,21 +16,22 @@
 						<img src="../../static/alter.png" alt="" srcset="" class="edit-icon-img" />
 					</view>
 				</view>
-			<view class="user-details">
-				<text class="username">{{ userInfo.nickname || '宠物爱好者' }}</text>
-				<text v-if="!isLoggedIn" class="user-phone login-hint" @click="goToLogin">{{ userInfo.phone || '点击登录' }}</text>
-				<text v-else class="user-phone">{{ userInfo.phone }}</text>
-				<view class="user-level">
-					<text class="level-text">{{ userInfo.level || '普通会员' }}</text>
+				<view class="user-details">
+					<text class="username">{{ userInfo.nickname || '宠物爱好者' }}</text>
+					<text v-if="!isLoggedIn" class="user-phone login-hint" @click="goToLogin">{{ userInfo.phone ||
+						'点击登录' }}</text>
+					<text v-else class="user-phone">{{ userInfo.phone }}</text>
+					<view class="user-level">
+						<text class="level-text">{{ userInfo.level || '普通会员' }}</text>
+					</view>
 				</view>
-			</view>
 			</view>
 			<view class="user-stats">
 				<view class="stat-item">
 					<text class="stat-number">{{ userInfo.points || 0 }}</text>
 					<text class="stat-label">积分</text>
 				</view>
-				<view class="stat-item">
+				<view class="stat-item" @click="goToCoupons" style="cursor: pointer;">
 					<text class="stat-number">{{ userInfo.coupons || 0 }}</text>
 					<text class="stat-label">优惠券</text>
 				</view>
@@ -97,9 +98,9 @@
 import { ref, onMounted } from 'vue'
 
 // 自定义导航栏高度
-const systemInfo = wx.getSystemInfoSync()
+const windowInfo = wx.getWindowInfo()
 const menuButtonInfo = wx.getMenuButtonBoundingClientRect()
-const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight)
+const customNavBarHeight = windowInfo.statusBarHeight + (menuButtonInfo.top - windowInfo.statusBarHeight)
 
 // 用户信息
 const userInfo = ref({
@@ -131,12 +132,12 @@ const orderTabs = ref([
 const serviceList = ref([
 	{ id: 1, text: '我的收藏', icon: '../../static/my/我的收藏.png', url: '/pages/my/favorites' },
 	{ id: 2, text: '浏览历史', icon: '../../static/my/浏览历史.png', url: '/pages/my/history' },
-	{ id: 3, text: '地址管理', icon: '../../static/my/地址管理.png', url: '/pages/my/address' },
-	{ id: 4, text: '优惠券', icon: '../../static/my/优惠券.png', url: '/pages/my/coupons' },
+	{ id: 3, text: '地址管理', icon: '../../static/my/地址管理.png', url: '/subpkg/pages/user/address' },
+	{ id: 4, text: '优惠券', icon: '../../static/my/优惠券.png', url: '/subpkg/pages/user/coupon' },
 	{ id: 5, text: '积分商城', icon: '../../static/my/积分商城.png', url: '/pages/my/points' },
 	{ id: 6, text: '客服中心', icon: '../../static/my/客服中心.png', url: '/pages/my/service' },
 	{ id: 7, text: '帮助中心', icon: '../../static/my/帮助中心.png', url: '/pages/my/help' },
-	{ id: 8, text: '邀请好友', icon: '../../static/my/邀请好友.png', url: '/pages/my/invite' }
+	{ id: 8, text: '邀请好友', icon: '../../static/my/邀请好友.png', url: '/subpkg/pages/user/invite' }
 ])
 
 // 其他功能列表
@@ -159,7 +160,7 @@ const goToProfile = () => {
 
 const goToLogin = () => {
 	console.log('点击登录被触发，当前登录状态:', isLoggedIn.value)
-	
+
 	// 直接跳转，不使用toast延迟
 	uni.navigateTo({
 		url: '/pages/login/index',
@@ -173,6 +174,20 @@ const goToLogin = () => {
 				icon: 'none'
 			})
 		}
+	})
+}
+
+const goToCoupons = () => {
+	if (!isLoggedIn.value) {
+		uni.showToast({
+			title: '请先登录',
+			icon: 'none'
+		})
+		return
+	}
+
+	uni.navigateTo({
+		url: '/subpkg/pages/user/coupon'
 	})
 }
 
@@ -256,10 +271,10 @@ const checkLoginStatus = () => {
 	try {
 		const isLoggedInStorage = uni.getStorageSync('isLoggedIn')
 		const userInfoStorage = uni.getStorageSync('userInfo')
-		
+
 		console.log('存储的登录状态:', isLoggedInStorage)
 		console.log('存储的用户信息:', userInfoStorage)
-		
+
 		if (isLoggedInStorage && userInfoStorage) {
 			isLoggedIn.value = true
 			userInfo.value = userInfoStorage
@@ -303,6 +318,13 @@ onMounted(() => {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	
+	&.sticky {
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+	}
 
 	.my-title {
 		font-size: 36rpx;
@@ -370,18 +392,18 @@ onMounted(() => {
 				display: block;
 			}
 
-		.user-phone {
-			font-size: 24rpx;
-			color: rgba(255, 255, 255, 0.8);
-			margin-bottom: 20rpx;
-			display: block;
+			.user-phone {
+				font-size: 24rpx;
+				color: rgba(255, 255, 255, 0.8);
+				margin-bottom: 20rpx;
+				display: block;
 
-			&.login-hint {
-				color: rgba(255, 255, 255, 0.9);
-				text-decoration: underline;
-				cursor: pointer;
+				&.login-hint {
+					color: rgba(255, 255, 255, 0.9);
+					text-decoration: underline;
+					cursor: pointer;
+				}
 			}
-		}
 
 			.user-level {
 				display: inline-block;

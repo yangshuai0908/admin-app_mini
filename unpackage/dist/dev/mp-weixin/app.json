@@ -6,6 +6,18 @@
     "pages/my/index",
     "pages/login/index"
   ],
+  "subPackages": [
+    {
+      "root": "subpkg",
+      "pages": [
+        "pages/user/coupon",
+        "pages/user/address",
+        "pages/user/address-form",
+        "pages/user/invite"
+      ],
+      "independent": true
+    }
+  ],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "uni-app",

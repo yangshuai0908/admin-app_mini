@@ -104,9 +104,9 @@
 import { ref, computed } from 'vue'
 
 // 自定义导航栏高度
-const systemInfo = wx.getSystemInfoSync()
+const windowInfo = wx.getWindowInfo()
 const menuButtonInfo = wx.getMenuButtonBoundingClientRect()
-const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight)
+const customNavBarHeight = windowInfo.statusBarHeight + (menuButtonInfo.top - windowInfo.statusBarHeight)
 
 // 登录类型
 const loginType = ref('phone')

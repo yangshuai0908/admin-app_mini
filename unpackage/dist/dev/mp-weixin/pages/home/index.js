@@ -16,11 +16,11 @@ if (!Math) {
 const _sfc_main = {
   __name: "index",
   setup(__props) {
-    const systemInfo = common_vendor.wx$1.getSystemInfoSync();
+    const windowInfo = common_vendor.wx$1.getWindowInfo();
     const menuButtonInfo = common_vendor.wx$1.getMenuButtonBoundingClientRect();
-    common_vendor.index.__f__("log", "at pages/home/index.vue:81", systemInfo.statusBarHeight, "状态栏的高度");
-    common_vendor.index.__f__("log", "at pages/home/index.vue:82", menuButtonInfo.top - systemInfo.statusBarHeight, "胶囊顶部到状态栏的高度");
-    const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight);
+    common_vendor.index.__f__("log", "at pages/home/index.vue:81", windowInfo.statusBarHeight, "状态栏的高度");
+    common_vendor.index.__f__("log", "at pages/home/index.vue:82", menuButtonInfo.top - windowInfo.statusBarHeight, "胶囊顶部到状态栏的高度");
+    const customNavBarHeight = windowInfo.statusBarHeight + (menuButtonInfo.top - windowInfo.statusBarHeight);
     const currentAddress = common_vendor.ref("定位中...");
     const keyword = common_vendor.ref();
     const list = common_vendor.reactive([

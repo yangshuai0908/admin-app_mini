@@ -76,11 +76,11 @@ import {
 	onMounted
 } from 'vue';
 // 自定义导航栏高度
-const systemInfo = wx.getSystemInfoSync();
+const windowInfo = wx.getWindowInfo();
 const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
-console.log(systemInfo.statusBarHeight, '状态栏的高度');
-console.log(menuButtonInfo.top - systemInfo.statusBarHeight, '胶囊顶部到状态栏的高度');
-const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight)
+console.log(windowInfo.statusBarHeight, '状态栏的高度');
+console.log(menuButtonInfo.top - windowInfo.statusBarHeight, '胶囊顶部到状态栏的高度');
+const customNavBarHeight = windowInfo.statusBarHeight + (menuButtonInfo.top - windowInfo.statusBarHeight)
 // 定位
 const currentAddress = ref('定位中...');
 // 搜索

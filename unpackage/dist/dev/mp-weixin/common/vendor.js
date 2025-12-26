@@ -2114,12 +2114,12 @@ function normalizeEmitsOptions(comp, appContext, asMixin = false) {
   }
   return normalized;
 }
-function isEmitListener(options, key) {
-  if (!options || !isOn(key)) {
+function isEmitListener(options2, key) {
+  if (!options2 || !isOn(key)) {
     return false;
   }
   key = key.slice(2).replace(/Once$/, "");
-  return hasOwn(options, key[0].toLowerCase() + key.slice(1)) || hasOwn(options, hyphenate(key)) || hasOwn(options, key);
+  return hasOwn(options2, key[0].toLowerCase() + key.slice(1)) || hasOwn(options2, hyphenate(key)) || hasOwn(options2, key);
 }
 let currentRenderingInstance = null;
 function setCurrentRenderingInstance(instance) {
@@ -2170,13 +2170,13 @@ function resolve(registry, name) {
   return registry && (registry[name] || registry[camelize(name)] || registry[capitalize(camelize(name))]);
 }
 const INITIAL_WATCHER_VALUE = {};
-function watch(source, cb, options) {
+function watch(source, cb, options2) {
   if (!isFunction(cb)) {
     warn$1(
       `\`watch(fn, options?)\` signature has been moved to a separate API. Use \`watchEffect(fn, options?)\` instead. \`watch\` now only supports \`watch(source, cb, options?) signature.`
     );
   }
-  return doWatch(source, cb, options);
+  return doWatch(source, cb, options2);
 }
 function doWatch(source, cb, {
   immediate,
@@ -2344,7 +2344,7 @@ function doWatch(source, cb, {
   }
   return unwatch;
 }
-function instanceWatch(source, value, options) {
+function instanceWatch(source, value, options2) {
   const publicThis = this.proxy;
   const getter = isString(source) ? source.includes(".") ? createPathGetter(publicThis, source) : () => publicThis[source] : source.bind(publicThis, publicThis);
   let cb;
@@ -2352,10 +2352,10 @@ function instanceWatch(source, value, options) {
     cb = value;
   } else {
     cb = value.handler;
-    options = value;
+    options2 = value;
   }
   const reset = setCurrentInstance(this);
-  const res = doWatch(getter, cb.bind(publicThis), options);
+  const res = doWatch(getter, cb.bind(publicThis), options2);
   reset();
   return res;
 }
@@ -2457,15 +2457,15 @@ function createAppAPI(render, hydrate) {
           );
         }
       },
-      use(plugin2, ...options) {
+      use(plugin2, ...options2) {
         if (installedPlugins.has(plugin2)) {
           warn$1(`Plugin has already been applied to target app.`);
         } else if (plugin2 && isFunction(plugin2.install)) {
           installedPlugins.add(plugin2);
-          plugin2.install(app, ...options);
+          plugin2.install(app, ...options2);
         } else if (isFunction(plugin2)) {
           installedPlugins.add(plugin2);
-          plugin2(app, ...options);
+          plugin2(app, ...options2);
         } else {
           warn$1(
             `A plugin must either be a function or an object with an "install" function.`
@@ -2913,12 +2913,12 @@ function createDuplicateChecker() {
 }
 let shouldCacheAccess = true;
 function applyOptions$1(instance) {
-  const options = resolveMergedOptions(instance);
+  const options2 = resolveMergedOptions(instance);
   const publicThis = instance.proxy;
   const ctx = instance.ctx;
   shouldCacheAccess = false;
-  if (options.beforeCreate) {
-    callHook$1(options.beforeCreate, instance, "bc");
+  if (options2.beforeCreate) {
+    callHook$1(options2.beforeCreate, instance, "bc");
   }
   const {
     // state
@@ -2952,7 +2952,7 @@ function applyOptions$1(instance) {
     components,
     directives,
     filters
-  } = options;
+  } = options2;
   const checkDuplicateProperties = createDuplicateChecker();
   {
     const [propsOptions] = instance.propsOptions;
@@ -3115,7 +3115,7 @@ function applyOptions$1(instance) {
   if (directives)
     instance.directives = directives;
   if (instance.ctx.$onApplyOptions) {
-    instance.ctx.$onApplyOptions(options, instance, publicThis);
+    instance.ctx.$onApplyOptions(options2, instance, publicThis);
   }
 }
 function resolveInjections(injectOptions, ctx, checkDuplicateProperties = NOOP) {
@@ -3360,7 +3360,7 @@ function updateProps(instance, rawProps, rawPrevProps, optimized) {
     vnode: { patchFlag }
   } = instance;
   const rawCurrentProps = toRaw(props2);
-  const [options] = instance.propsOptions;
+  const [options2] = instance.propsOptions;
   let hasAttrsChanged = false;
   if (
     // always force full diff in dev
@@ -3376,7 +3376,7 @@ function updateProps(instance, rawProps, rawPrevProps, optimized) {
           continue;
         }
         const value = rawProps[key];
-        if (options) {
+        if (options2) {
           if (hasOwn(attrs, key)) {
             if (value !== attrs[key]) {
               attrs[key] = value;
@@ -3385,7 +3385,7 @@ function updateProps(instance, rawProps, rawPrevProps, optimized) {
           } else {
             const camelizedKey = camelize(key);
             props2[camelizedKey] = resolvePropValue$1(
-              options,
+              options2,
               rawCurrentProps,
               camelizedKey,
               value,
@@ -3411,12 +3411,12 @@ function updateProps(instance, rawProps, rawPrevProps, optimized) {
       !hasOwn(rawProps, key) && // it's possible the original props was passed in as kebab-case
       // and converted to camelCase (#955)
       ((kebabKey = hyphenate(key)) === key || !hasOwn(rawProps, kebabKey))) {
-        if (options) {
+        if (options2) {
           if (rawPrevProps && // for camelCase
           (rawPrevProps[key] !== void 0 || // for kebab-case
           rawPrevProps[kebabKey] !== void 0)) {
             props2[key] = resolvePropValue$1(
-              options,
+              options2,
               rawCurrentProps,
               key,
               void 0,
@@ -3446,7 +3446,7 @@ function updateProps(instance, rawProps, rawPrevProps, optimized) {
   }
 }
 function setFullProps(instance, rawProps, props2, attrs) {
-  const [options, needCastKeys] = instance.propsOptions;
+  const [options2, needCastKeys] = instance.propsOptions;
   let hasAttrsChanged = false;
   let rawCastValues;
   if (rawProps) {
@@ -3456,7 +3456,7 @@ function setFullProps(instance, rawProps, props2, attrs) {
       }
       const value = rawProps[key];
       let camelKey;
-      if (options && hasOwn(options, camelKey = camelize(key))) {
+      if (options2 && hasOwn(options2, camelKey = camelize(key))) {
         if (!needCastKeys || !needCastKeys.includes(camelKey)) {
           props2[camelKey] = value;
         } else {
@@ -3476,7 +3476,7 @@ function setFullProps(instance, rawProps, props2, attrs) {
     for (let i = 0; i < needCastKeys.length; i++) {
       const key = needCastKeys[i];
       props2[key] = resolvePropValue$1(
-        options,
+        options2,
         rawCurrentProps,
         key,
         castValues[key],
@@ -3487,8 +3487,8 @@ function setFullProps(instance, rawProps, props2, attrs) {
   }
   return hasAttrsChanged;
 }
-function resolvePropValue$1(options, props2, key, value, instance, isAbsent) {
-  const opt = options[key];
+function resolvePropValue$1(options2, props2, key, value, instance, isAbsent) {
+  const opt = options2[key];
   if (opt != null) {
     const hasDefault = hasOwn(opt, "default");
     if (hasDefault && value === void 0) {
@@ -3635,9 +3635,9 @@ function getTypeIndex(type, expectedTypes) {
 }
 function validateProps(rawProps, props2, instance) {
   const resolvedValues = toRaw(props2);
-  const options = instance.propsOptions[0];
-  for (const key in options) {
-    let opt = options[key];
+  const options2 = instance.propsOptions[0];
+  for (const key in options2) {
+    let opt = options2[key];
     if (opt == null)
       continue;
     validateProp$1(
@@ -4397,13 +4397,13 @@ function initAppConfig(appConfig) {
     return nextTick(this.$, fn);
   };
 }
-function onApplyOptions(options, instance, publicThis) {
+function onApplyOptions(options2, instance, publicThis) {
   instance.appContext.config.globalProperties.$applyOptions(
-    options,
+    options2,
     instance,
     publicThis
   );
-  const computedOptions = options.computed;
+  const computedOptions = options2.computed;
   if (computedOptions) {
     const keys = Object.keys(computedOptions);
     if (keys.length) {
@@ -4549,18 +4549,18 @@ function warnRef(ref2) {
   warn("Invalid template ref type:", ref2, `(${typeof ref2})`);
 }
 const queuePostRenderEffect = queuePostFlushCb;
-function mountComponent(initialVNode, options) {
-  const instance = initialVNode.component = createComponentInstance(initialVNode, options.parentComponent, null);
-  instance.renderer = options.mpType ? options.mpType : "component";
+function mountComponent(initialVNode, options2) {
+  const instance = initialVNode.component = createComponentInstance(initialVNode, options2.parentComponent, null);
+  instance.renderer = options2.mpType ? options2.mpType : "component";
   {
     instance.ctx.$onApplyOptions = onApplyOptions;
     instance.ctx.$children = [];
   }
-  if (options.mpType === "app") {
+  if (options2.mpType === "app") {
     instance.render = NOOP;
   }
-  if (options.onBeforeSetup) {
-    options.onBeforeSetup(instance, options);
+  if (options2.onBeforeSetup) {
+    options2.onBeforeSetup(instance, options2);
   }
   {
     pushWarningContext(initialVNode);
@@ -4574,8 +4574,8 @@ function mountComponent(initialVNode, options) {
     endMeasure(instance, `init`);
   }
   {
-    if (options.parentComponent && instance.proxy) {
-      options.parentComponent.ctx.$children.push(getExposeProxy(instance) || instance.proxy);
+    if (options2.parentComponent && instance.proxy) {
+      options2.parentComponent.ctx.$children.push(getExposeProxy(instance) || instance.proxy);
     }
   }
   setupRenderEffect(instance);
@@ -4850,8 +4850,8 @@ function createVueApp(rootComponent, rootProps = null) {
     initialVNode.shapeFlag = 6;
     return initialVNode;
   };
-  const createComponent2 = function createComponent22(initialVNode, options) {
-    return mountComponent(createVNode2(initialVNode), options);
+  const createComponent2 = function createComponent22(initialVNode, options2) {
+    return mountComponent(createVNode2(initialVNode), options2);
   };
   const destroyComponent = function destroyComponent2(component) {
     return component && unmountComponent(component.$);
@@ -4888,15 +4888,15 @@ function injectLifecycleHook(name, hook, publicThis, instance) {
     injectHook(name, hook.bind(publicThis), instance);
   }
 }
-function initHooks$1(options, instance, publicThis) {
-  const mpType = options.mpType || publicThis.$mpType;
+function initHooks$1(options2, instance, publicThis) {
+  const mpType = options2.mpType || publicThis.$mpType;
   if (!mpType || mpType === "component" || // instance.renderer 标识页面是否作为组件渲染
   mpType === "page" && instance.renderer === "component") {
     return;
   }
-  Object.keys(options).forEach((name) => {
-    if (isUniLifecycleHook(name, options[name], false)) {
-      const hooks = options[name];
+  Object.keys(options2).forEach((name) => {
+    if (isUniLifecycleHook(name, options2[name], false)) {
+      const hooks = options2[name];
       if (isArray$1(hooks)) {
         hooks.forEach((hook) => injectLifecycleHook(name, hook, publicThis, instance));
       } else {
@@ -4905,8 +4905,8 @@ function initHooks$1(options, instance, publicThis) {
     }
   });
 }
-function applyOptions$2(options, instance, publicThis) {
-  initHooks$1(options, instance, publicThis);
+function applyOptions$2(options2, instance, publicThis) {
+  initHooks$1(options2, instance, publicThis);
 }
 function set(target, key, val) {
   return target[key] = val;
@@ -5287,7 +5287,7 @@ function setRef(ref2, id, opts = {}) {
 const o = (value, key) => vOn(value, key);
 const f = (source, renderItem) => vFor(source, renderItem);
 const r = (name, props2, key) => renderSlot(name, props2, key);
-const w = (fn, options) => withScopedSlot(fn, options);
+const w = (fn, options2) => withScopedSlot(fn, options2);
 const s = (value) => stringifyStyle(value);
 const e = (target, ...sources) => extend(target, ...sources);
 const n = (value) => normalizeClass(value);
@@ -5541,20 +5541,20 @@ function queue(hooks, data, params2) {
     }
   };
 }
-function wrapperOptions(interceptors2, options = {}) {
+function wrapperOptions(interceptors2, options2 = {}) {
   [HOOK_SUCCESS, HOOK_FAIL, HOOK_COMPLETE].forEach((name) => {
     const hooks = interceptors2[name];
     if (!isArray$1(hooks)) {
       return;
     }
-    const oldCallback = options[name];
-    options[name] = function callbackInterceptor(res) {
-      queue(hooks, res, options).then((res2) => {
+    const oldCallback = options2[name];
+    options2[name] = function callbackInterceptor(res) {
+      queue(hooks, res, options2).then((res2) => {
         return isFunction(oldCallback) && oldCallback(res2) || res2;
       });
     };
   });
-  return options;
+  return options2;
 }
 function wrapperReturnValue(method, returnValue) {
   const returnValueHooks = [];
@@ -5587,19 +5587,19 @@ function getApiInterceptorHooks(method) {
   }
   return interceptor;
 }
-function invokeApi(method, api, options, params2) {
+function invokeApi(method, api, options2, params2) {
   const interceptor = getApiInterceptorHooks(method);
   if (interceptor && Object.keys(interceptor).length) {
     if (isArray$1(interceptor.invoke)) {
-      const res = queue(interceptor.invoke, options);
-      return res.then((options2) => {
-        return api(wrapperOptions(getApiInterceptorHooks(method), options2), ...params2);
+      const res = queue(interceptor.invoke, options2);
+      return res.then((options22) => {
+        return api(wrapperOptions(getApiInterceptorHooks(method), options22), ...params2);
       });
     } else {
-      return api(wrapperOptions(interceptor, options), ...params2);
+      return api(wrapperOptions(interceptor, options2), ...params2);
     }
   }
-  return api(options, ...params2);
+  return api(options2, ...params2);
 }
 function hasCallback(args) {
   if (isPlainObject$1(args) && [API_SUCCESS, API_FAIL, API_COMPLETE].find((cb) => isFunction(args[cb]))) {
@@ -5620,7 +5620,7 @@ function promisify$1(name, fn) {
     })));
   };
 }
-function formatApiArgs(args, options) {
+function formatApiArgs(args, options2) {
   args[0];
   {
     return;
@@ -5648,7 +5648,7 @@ function invokeFail(id, name, errMsg, errRes = {}) {
   let res = extend({ errMsg: apiErrMsg }, errRes);
   return invokeCallback(id, res);
 }
-function beforeInvokeApi(name, args, protocol, options) {
+function beforeInvokeApi(name, args, protocol, options2) {
   {
     validateProtocols(name, args, protocol);
   }
@@ -5669,9 +5669,9 @@ function parseErrMsg(errMsg) {
   }
   return errMsg;
 }
-function wrapperTaskApi(name, fn, protocol, options) {
+function wrapperTaskApi(name, fn, protocol, options2) {
   return (args) => {
-    const id = createAsyncApiCallback(name, args, options);
+    const id = createAsyncApiCallback(name, args, options2);
     const errMsg = beforeInvokeApi(name, [args], protocol);
     if (errMsg) {
       return invokeFail(id, name, errMsg);
@@ -5682,7 +5682,7 @@ function wrapperTaskApi(name, fn, protocol, options) {
     });
   };
 }
-function wrapperSyncApi(name, fn, protocol, options) {
+function wrapperSyncApi(name, fn, protocol, options2) {
   return (...args) => {
     const errMsg = beforeInvokeApi(name, args, protocol);
     if (errMsg) {
@@ -5691,14 +5691,14 @@ function wrapperSyncApi(name, fn, protocol, options) {
     return fn.apply(null, args);
   };
 }
-function wrapperAsyncApi(name, fn, protocol, options) {
-  return wrapperTaskApi(name, fn, protocol, options);
+function wrapperAsyncApi(name, fn, protocol, options2) {
+  return wrapperTaskApi(name, fn, protocol, options2);
 }
-function defineSyncApi(name, fn, protocol, options) {
+function defineSyncApi(name, fn, protocol, options2) {
   return wrapperSyncApi(name, fn, protocol);
 }
-function defineAsyncApi(name, fn, protocol, options) {
-  return promisify$1(name, wrapperAsyncApi(name, fn, protocol, options));
+function defineAsyncApi(name, fn, protocol, options2) {
+  return promisify$1(name, wrapperAsyncApi(name, fn, protocol, options2));
 }
 const API_UPX2PX = "upx2px";
 const Upx2pxProtocol = [
@@ -6011,12 +6011,12 @@ function promisify(name, api) {
   if (!isFunction(api)) {
     return api;
   }
-  return function promiseApi(options = {}, ...rest) {
-    if (isFunction(options.success) || isFunction(options.fail) || isFunction(options.complete)) {
-      return wrapperReturnValue(name, invokeApi(name, api, extend({}, options), rest));
+  return function promiseApi(options2 = {}, ...rest) {
+    if (isFunction(options2.success) || isFunction(options2.fail) || isFunction(options2.complete)) {
+      return wrapperReturnValue(name, invokeApi(name, api, extend({}, options2), rest));
     }
     return wrapperReturnValue(name, handlePromise(new Promise((resolve2, reject) => {
-      invokeApi(name, api, extend({}, options, {
+      invokeApi(name, api, extend({}, options2, {
         success: resolve2,
         fail: reject
       }), rest);
@@ -6093,23 +6093,23 @@ function initWrapper(protocols2) {
     }
     const protocol = protocols2[methodName];
     return function(arg1, arg2) {
-      let options = protocol || {};
+      let options2 = protocol || {};
       if (isFunction(protocol)) {
-        options = protocol(arg1);
+        options2 = protocol(arg1);
       }
-      arg1 = processArgs(methodName, arg1, options.args, options.returnValue);
+      arg1 = processArgs(methodName, arg1, options2.args, options2.returnValue);
       const args = [arg1];
       if (typeof arg2 !== "undefined") {
         args.push(arg2);
       }
-      const returnValue = wx[options.name || methodName].apply(wx, args);
+      const returnValue = wx[options2.name || methodName].apply(wx, args);
       if (isContextApi(methodName) || isTaskApi(methodName)) {
         if (returnValue && !returnValue.__v_skip) {
           returnValue.__v_skip = true;
         }
       }
       if (isSyncApi(methodName)) {
-        return processReturnValue(methodName, returnValue, options.returnValue, isContextApi(methodName));
+        return processReturnValue(methodName, returnValue, options2.returnValue, isContextApi(methodName));
       }
       return returnValue;
     };
@@ -7315,12 +7315,12 @@ function createEmitFn(oldEmit, ctx) {
     return oldEmit.apply(this, [event, ...args]);
   };
 }
-function initBaseInstance(instance, options) {
+function initBaseInstance(instance, options2) {
   const ctx = instance.ctx;
-  ctx.mpType = options.mpType;
-  ctx.$mpType = options.mpType;
+  ctx.mpType = options2.mpType;
+  ctx.$mpType = options2.mpType;
   ctx.$mpPlatform = "mp-weixin";
-  ctx.$scope = options.mpInstance;
+  ctx.$scope = options2.mpInstance;
   {
     Object.defineProperties(ctx, {
       // only id
@@ -7337,8 +7337,8 @@ function initBaseInstance(instance, options) {
     ctx._self = {};
   }
   instance.slots = {};
-  if (isArray$1(options.slots) && options.slots.length) {
-    options.slots.forEach((name) => {
+  if (isArray$1(options2.slots) && options2.slots.length) {
+    options2.slots.forEach((name) => {
       instance.slots[name] = true;
     });
     if (instance.slots[SLOT_DEFAULT_NAME]) {
@@ -7347,15 +7347,15 @@ function initBaseInstance(instance, options) {
   }
   ctx.getOpenerEventChannel = function() {
     {
-      return options.mpInstance.getOpenerEventChannel();
+      return options2.mpInstance.getOpenerEventChannel();
     }
   };
   ctx.$hasHook = hasHook;
   ctx.$callHook = callHook;
   instance.emit = createEmitFn(instance.emit, ctx);
 }
-function initComponentInstance(instance, options) {
-  initBaseInstance(instance, options);
+function initComponentInstance(instance, options2) {
+  initBaseInstance(instance, options2);
   const ctx = instance.ctx;
   MP_METHODS.forEach((method) => {
     ctx[method] = function(...args) {
@@ -7484,7 +7484,7 @@ function parseApp(instance, parseAppOptions) {
     globalData: instance.$options && instance.$options.globalData || {},
     $vm: instance,
     // mp-alipay 组件 data 初始化比 onLaunch 早，提前挂载
-    onLaunch(options) {
+    onLaunch(options2) {
       this.$vm = instance;
       const ctx = internalInstance.ctx;
       if (this.$vm && ctx.$scope && ctx.$callHook) {
@@ -7496,7 +7496,7 @@ function parseApp(instance, parseAppOptions) {
         slots: []
       });
       ctx.globalData = this.globalData;
-      instance.$callHook(ON_LAUNCH, options);
+      instance.$callHook(ON_LAUNCH, options2);
     }
   };
   const onErrorHandlers = wx.$onErrorHandlers;
@@ -7590,7 +7590,7 @@ const builtInProps = [
   // 小程序不能直接定义 $slots 的 props，所以通过 vueSlots 转换到 $slots
   "uS"
 ];
-function initDefaultProps(options, isBehavior = false) {
+function initDefaultProps(options2, isBehavior = false) {
   const properties = {};
   if (!isBehavior) {
     let observerSlots = function(newVal) {
@@ -7616,15 +7616,15 @@ function initDefaultProps(options, isBehavior = false) {
       properties.uS.observer = observerSlots;
     }
   }
-  if (options.behaviors) {
-    if (options.behaviors.includes("wx://form-field")) {
-      if (!options.properties || !options.properties.name) {
+  if (options2.behaviors) {
+    if (options2.behaviors.includes("wx://form-field")) {
+      if (!options2.properties || !options2.properties.name) {
         properties.name = {
           type: null,
           value: ""
         };
       }
-      if (!options.properties || !options.properties.value) {
+      if (!options2.properties || !options2.properties.value) {
         properties.value = {
           type: null,
           value: ""
@@ -7634,10 +7634,10 @@ function initDefaultProps(options, isBehavior = false) {
   }
   return properties;
 }
-function initVirtualHostProps(options) {
+function initVirtualHostProps(options2) {
   const properties = {};
   {
-    if (options && options.virtualHost) {
+    if (options2 && options2.virtualHost) {
       properties[VIRTUAL_HOST_STYLE] = {
         type: null,
         value: ""
@@ -7825,7 +7825,7 @@ function applyOptions(componentOptions, vueOptions) {
 }
 function parseComponent(vueOptions, { parse, mocks: mocks2, isPage: isPage2, isPageInProject, initRelation: initRelation2, handleLink: handleLink2, initLifetimes: initLifetimes2 }) {
   vueOptions = vueOptions.default || vueOptions;
-  const options = {
+  const options2 = {
     multipleSlots: true,
     // styleIsolation: 'apply-shared',
     addGlobalClass: true,
@@ -7834,15 +7834,15 @@ function parseComponent(vueOptions, { parse, mocks: mocks2, isPage: isPage2, isP
   if (isArray$1(vueOptions.mixins)) {
     vueOptions.mixins.forEach((item) => {
       if (isObject$1(item.options)) {
-        extend(options, item.options);
+        extend(options2, item.options);
       }
     });
   }
   if (vueOptions.options) {
-    extend(options, vueOptions.options);
+    extend(options2, vueOptions.options);
   }
   const mpComponentOptions = {
-    options,
+    options: options2,
     lifetimes: initLifetimes2({ mocks: mocks2, isPage: isPage2, initRelation: initRelation2, vueOptions }),
     pageLifetimes: {
       show() {
@@ -7884,11 +7884,11 @@ let $destroyComponentFn;
 function getAppVm() {
   return getApp().$vm;
 }
-function $createComponent(initialVNode, options) {
+function $createComponent(initialVNode, options2) {
   if (!$createComponentFn) {
     $createComponentFn = getAppVm().$createComponent;
   }
-  const proxy = $createComponentFn(initialVNode, options);
+  const proxy = $createComponentFn(initialVNode, options2);
   return getExposeProxy(proxy.$) || proxy;
 }
 function $destroyComponent(instance) {
@@ -7953,31 +7953,31 @@ function initTriggerEvent(mpInstance) {
     mpInstance._triggerEvent = newTriggerEvent;
   }
 }
-function initMiniProgramHook(name, options, isComponent) {
-  const oldHook = options[name];
+function initMiniProgramHook(name, options2, isComponent) {
+  const oldHook = options2[name];
   if (!oldHook) {
-    options[name] = function() {
+    options2[name] = function() {
       initTriggerEvent(this);
     };
   } else {
-    options[name] = function(...args) {
+    options2[name] = function(...args) {
       initTriggerEvent(this);
       return oldHook.apply(this, args);
     };
   }
 }
-Page = function(options) {
-  initMiniProgramHook(ON_LOAD, options);
-  return MPPage(options);
+Page = function(options2) {
+  initMiniProgramHook(ON_LOAD, options2);
+  return MPPage(options2);
 };
-Component = function(options) {
-  initMiniProgramHook("created", options);
-  const isVueComponent = options.properties && options.properties.uP;
+Component = function(options2) {
+  initMiniProgramHook("created", options2);
+  const isVueComponent = options2.properties && options2.properties.uP;
   if (!isVueComponent) {
-    initProps(options);
-    initPropsObserver(options);
+    initProps(options2);
+    initPropsObserver(options2);
   }
-  return MPComponent(options);
+  return MPComponent(options2);
 };
 function initLifetimes({ mocks: mocks2, isPage: isPage2, initRelation: initRelation2, vueOptions }) {
   return {
@@ -8000,10 +8000,10 @@ function initLifetimes({ mocks: mocks2, isPage: isPage2, initRelation: initRelat
         slots: properties.uS || {},
         // vueSlots
         parentComponent: relationOptions.parent && relationOptions.parent.$,
-        onBeforeSetup(instance, options) {
+        onBeforeSetup(instance, options2) {
           initRefs(instance, mpInstance);
           initMocks(instance, mpInstance, mocks2);
-          initComponentInstance(instance, options);
+          initComponentInstance(instance, options2);
         }
       });
       if (!isMiniProgramPage) {
@@ -8065,8 +8065,8 @@ const createSubpackageApp = initCreateSubpackageApp();
   wx.createPluginApp = global.createPluginApp = createPluginApp;
   wx.createSubpackageApp = global.createSubpackageApp = createSubpackageApp;
 }
-const defineMixin = (options) => {
-  return options;
+const defineMixin = (options2) => {
+  return options2;
 };
 function email(value) {
   return /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(value);
@@ -8995,14 +8995,14 @@ class Router {
     return url2 += query;
   }
   // 对外的方法名称
-  async route(options = {}, params2 = {}) {
+  async route(options2 = {}, params2 = {}) {
     let mergeConfig2 = {};
-    if (typeof options === "string") {
-      mergeConfig2.url = this.mixinParam(options, params2);
+    if (typeof options2 === "string") {
+      mergeConfig2.url = this.mixinParam(options2, params2);
       mergeConfig2.type = "navigateTo";
     } else {
-      mergeConfig2 = deepMerge$1(this.config, options);
-      mergeConfig2.url = this.mixinParam(options.url, options.params);
+      mergeConfig2 = deepMerge$1(this.config, options2);
+      mergeConfig2.url = this.mixinParam(options2.url, options2.params);
     }
     if (mergeConfig2.url === page())
       return;
@@ -9936,67 +9936,67 @@ class Request {
   request(config2 = {}) {
     return this.middleware(config2);
   }
-  get(url2, options = {}) {
+  get(url2, options2 = {}) {
     return this.middleware({
       url: url2,
       method: "GET",
-      ...options
+      ...options2
     });
   }
-  post(url2, data, options = {}) {
+  post(url2, data, options2 = {}) {
     return this.middleware({
       url: url2,
       data,
       method: "POST",
-      ...options
+      ...options2
     });
   }
-  put(url2, data, options = {}) {
+  put(url2, data, options2 = {}) {
     return this.middleware({
       url: url2,
       data,
       method: "PUT",
-      ...options
+      ...options2
     });
   }
-  delete(url2, data, options = {}) {
+  delete(url2, data, options2 = {}) {
     return this.middleware({
       url: url2,
       data,
       method: "DELETE",
-      ...options
+      ...options2
     });
   }
-  connect(url2, data, options = {}) {
+  connect(url2, data, options2 = {}) {
     return this.middleware({
       url: url2,
       data,
       method: "CONNECT",
-      ...options
+      ...options2
     });
   }
-  head(url2, data, options = {}) {
+  head(url2, data, options2 = {}) {
     return this.middleware({
       url: url2,
       data,
       method: "HEAD",
-      ...options
+      ...options2
     });
   }
-  options(url2, data, options = {}) {
+  options(url2, data, options2 = {}) {
     return this.middleware({
       url: url2,
       data,
       method: "OPTIONS",
-      ...options
+      ...options2
     });
   }
-  trace(url2, data, options = {}) {
+  trace(url2, data, options2 = {}) {
     return this.middleware({
       url: url2,
       data,
       method: "TRACE",
-      ...options
+      ...options2
     });
   }
   upload(url2, config2 = {}) {
@@ -12340,7 +12340,7 @@ const Upload = {
     videoPreviewObjectFit: "cover"
   }
 };
-const props$e = {
+const props$l = {
   ...ActionSheet,
   ...Album,
   ...Alert,
@@ -12433,7 +12433,7 @@ const props$e = {
 };
 function setConfig$1(configs) {
   shallowMerge(config, configs.config || {});
-  shallowMerge(props$e, configs.props || {});
+  shallowMerge(props$l, configs.props || {});
   shallowMerge(color$3, configs.color || {});
   shallowMerge(zIndex, configs.zIndex || {});
 }
@@ -12490,7 +12490,7 @@ const fontUtil = {
 let themeType = ["primary", "success", "error", "warning", "info"];
 function setConfig(configs) {
   index.shallowMerge(config, configs.config || {});
-  index.shallowMerge(props$e, configs.props || {});
+  index.shallowMerge(props$l, configs.props || {});
   index.shallowMerge(color$3, configs.color || {});
   index.shallowMerge(zIndex, configs.zIndex || {});
 }
@@ -12537,32 +12537,32 @@ const install = (Vue, upuiParams = "") => {
 const uviewPlus = {
   install
 };
-const props$d = defineMixin({
+const props$k = defineMixin({
   props: {
     // 绑定的值
     modelValue: {
       type: [String, Number],
-      default: () => props$e.search.value
+      default: () => props$l.search.value
     },
     // 搜索框形状，round-圆形，square-方形
     shape: {
       type: String,
-      default: () => props$e.search.shape
+      default: () => props$l.search.shape
     },
     // 搜索框背景色
     bgColor: {
       type: String,
-      default: () => props$e.search.bgColor
+      default: () => props$l.search.bgColor
     },
     // 占位提示文字
     placeholder: {
       type: String,
-      default: () => props$e.search.placeholder
+      default: () => props$l.search.placeholder
     },
     // 是否启用清除控件
     clearabled: {
       type: Boolean,
-      default: () => props$e.search.clearabled
+      default: () => props$l.search.clearabled
     },
     // 是否仅聚焦时显示清除控件
     onlyClearableOnFocused: {
@@ -12572,557 +12572,717 @@ const props$d = defineMixin({
     // 是否自动聚焦
     focus: {
       type: Boolean,
-      default: () => props$e.search.focus
+      default: () => props$l.search.focus
     },
     // 是否在搜索框右侧显示取消按钮
     showAction: {
       type: Boolean,
-      default: () => props$e.search.showAction
+      default: () => props$l.search.showAction
     },
     // 右侧取消按钮文字
     actionText: {
       type: String,
-      default: () => props$e.search.actionText
+      default: () => props$l.search.actionText
     },
     // 搜索框左侧文本
     label: {
       type: [String, Number, null],
-      default: () => props$e.search.label
+      default: () => props$l.search.label
     },
     // 输入框内容对齐方式，可选值为：left|center|right
     inputAlign: {
       type: String,
-      default: () => props$e.search.inputAlign
+      default: () => props$l.search.inputAlign
     },
     // 是否启用输入框
     disabled: {
       type: Boolean,
-      default: () => props$e.search.disabled
+      default: () => props$l.search.disabled
     },
     // 开启showAction时，是否在input获取焦点时才显示
     animation: {
       type: Boolean,
-      default: () => props$e.search.animation
+      default: () => props$l.search.animation
     },
     // 边框颜色，只要配置了颜色，才会有边框
     borderColor: {
       type: String,
-      default: () => props$e.search.borderColor
+      default: () => props$l.search.borderColor
     },
     // 搜索图标的颜色，默认同输入框字体颜色
     searchIconColor: {
       type: String,
-      default: () => props$e.search.searchIconColor
+      default: () => props$l.search.searchIconColor
     },
     // 搜索图标的大小
     searchIconSize: {
       type: [Number, String],
-      default: () => props$e.search.searchIconSize
+      default: () => props$l.search.searchIconSize
     },
     // 输入框字体颜色
     color: {
       type: String,
-      default: () => props$e.search.color
+      default: () => props$l.search.color
     },
     // placeholder的颜色
     placeholderColor: {
       type: String,
-      default: () => props$e.search.placeholderColor
+      default: () => props$l.search.placeholderColor
     },
     // 左边输入框的图标，可以为uView图标名称或图片路径
     searchIcon: {
       type: String,
-      default: () => props$e.search.searchIcon
+      default: () => props$l.search.searchIcon
     },
     // 组件与其他上下左右元素之间的距离，带单位的字符串形式，如"30px"
     margin: {
       type: String,
-      default: () => props$e.search.margin
+      default: () => props$l.search.margin
     },
     // 应该是uView-plus版本新增的，用于控制搜索图标的插槽位置
     iconPosition: {
       type: String,
-      default: () => props$e.search.iconPosition
+      default: () => props$l.search.iconPosition
     },
     // 输入框最大能输入的长度，-1为不限制长度
     maxlength: {
       type: [String, Number],
-      default: () => props$e.search.maxlength
+      default: () => props$l.search.maxlength
     },
     // 输入框高度，单位px
     height: {
       type: [String, Number],
-      default: () => props$e.search.height
+      default: () => props$l.search.height
     },
     // 键盘弹起时，是否自动上推页面
     adjustPosition: {
       type: Boolean,
-      default: () => props$e.search.adjustPosition
+      default: () => props$l.search.adjustPosition
     },
     // 键盘收起时，是否自动失去焦点
     autoBlur: {
       type: Boolean,
-      default: () => props$e.search.autoBlur
+      default: () => props$l.search.autoBlur
     },
     // 输入框的样式，对象形式
     inputStyle: {
       type: Object,
-      default: () => props$e.search.inputStyle
+      default: () => props$l.search.inputStyle
     },
     // 右侧控件的样式，对象形式
     actionStyle: {
       type: Object,
-      default: () => props$e.search.actionStyle
+      default: () => props$l.search.actionStyle
     },
     // 自定义样式，对象形式
     customStyle: {
       type: Object,
-      default: () => props$e.search.customStyle
+      default: () => props$l.search.customStyle
     }
   }
 });
-const props$c = defineMixin({
+const props$j = defineMixin({
   props: {
     // 列表数组，元素可为字符串，如为对象可通过keyName指定目标属性名
     list: {
       type: Array,
-      default: () => props$e.swiper.list
+      default: () => props$l.swiper.list
     },
     // 是否显示面板指示器
     indicator: {
       type: Boolean,
-      default: () => props$e.swiper.indicator
+      default: () => props$l.swiper.indicator
     },
     // 指示器非激活颜色
     indicatorActiveColor: {
       type: String,
-      default: () => props$e.swiper.indicatorActiveColor
+      default: () => props$l.swiper.indicatorActiveColor
     },
     // 指示器的激活颜色
     indicatorInactiveColor: {
       type: String,
-      default: () => props$e.swiper.indicatorInactiveColor
+      default: () => props$l.swiper.indicatorInactiveColor
     },
     // 指示器样式，可通过bottom，left，right进行定位
     indicatorStyle: {
       type: [String, Object],
-      default: () => props$e.swiper.indicatorStyle
+      default: () => props$l.swiper.indicatorStyle
     },
     // 指示器模式，line-线型，dot-点型
     indicatorMode: {
       type: String,
-      default: () => props$e.swiper.indicatorMode
+      default: () => props$l.swiper.indicatorMode
     },
     // 是否自动切换
     autoplay: {
       type: Boolean,
-      default: () => props$e.swiper.autoplay
+      default: () => props$l.swiper.autoplay
     },
     // 当前所在滑块的 index
     current: {
       type: [String, Number],
-      default: () => props$e.swiper.current
+      default: () => props$l.swiper.current
     },
     // 当前所在滑块的 item-id ，不能与 current 被同时指定
     currentItemId: {
       type: String,
-      default: () => props$e.swiper.currentItemId
+      default: () => props$l.swiper.currentItemId
     },
     // 滑块自动切换时间间隔
     interval: {
       type: [String, Number],
-      default: () => props$e.swiper.interval
+      default: () => props$l.swiper.interval
     },
     // 滑块切换过程所需时间
     duration: {
       type: [String, Number],
-      default: () => props$e.swiper.duration
+      default: () => props$l.swiper.duration
     },
     // 播放到末尾后是否重新回到开头
     circular: {
       type: Boolean,
-      default: () => props$e.swiper.circular
+      default: () => props$l.swiper.circular
     },
     // 前边距，可用于露出前一项的一小部分，nvue和支付宝不支持
     previousMargin: {
       type: [String, Number],
-      default: () => props$e.swiper.previousMargin
+      default: () => props$l.swiper.previousMargin
     },
     // 后边距，可用于露出后一项的一小部分，nvue和支付宝不支持
     nextMargin: {
       type: [String, Number],
-      default: () => props$e.swiper.nextMargin
+      default: () => props$l.swiper.nextMargin
     },
     // 当开启时，会根据滑动速度，连续滑动多屏，支付宝不支持
     acceleration: {
       type: Boolean,
-      default: () => props$e.swiper.acceleration
+      default: () => props$l.swiper.acceleration
     },
     // 同时显示的滑块数量，nvue、支付宝小程序不支持
     displayMultipleItems: {
       type: Number,
-      default: () => props$e.swiper.displayMultipleItems
+      default: () => props$l.swiper.displayMultipleItems
     },
     // 指定swiper切换缓动动画类型，有效值：default、linear、easeInCubic、easeOutCubic、easeInOutCubic
     // 只对微信小程序有效
     easingFunction: {
       type: String,
-      default: () => props$e.swiper.easingFunction
+      default: () => props$l.swiper.easingFunction
     },
     // list数组中指定对象的目标属性名
     keyName: {
       type: String,
-      default: () => props$e.swiper.keyName
+      default: () => props$l.swiper.keyName
     },
     // 图片的裁剪模式
     imgMode: {
       type: String,
-      default: () => props$e.swiper.imgMode
+      default: () => props$l.swiper.imgMode
     },
     // 组件高度
     height: {
       type: [String, Number],
-      default: () => props$e.swiper.height
+      default: () => props$l.swiper.height
     },
     // 背景颜色
     bgColor: {
       type: String,
-      default: () => props$e.swiper.bgColor
+      default: () => props$l.swiper.bgColor
     },
     // 组件圆角，数值或带单位的字符串
     radius: {
       type: [String, Number],
-      default: () => props$e.swiper.radius
+      default: () => props$l.swiper.radius
     },
     // 是否加载中
     loading: {
       type: Boolean,
-      default: () => props$e.swiper.loading
+      default: () => props$l.swiper.loading
     },
     // 是否显示标题，要求数组对象中有title属性
     showTitle: {
       type: Boolean,
-      default: () => props$e.swiper.showTitle
+      default: () => props$l.swiper.showTitle
     }
   }
 });
-const props$b = defineMixin({
+const props$i = defineMixin({
   props: {
     // 滑块的移动过渡时间，单位ms
     duration: {
       type: Number,
-      default: () => props$e.tabs.duration
+      default: () => props$l.tabs.duration
     },
     // tabs标签数组
     list: {
       type: Array,
-      default: () => props$e.tabs.list
+      default: () => props$l.tabs.list
     },
     // 滑块颜色
     lineColor: {
       type: String,
-      default: () => props$e.tabs.lineColor
+      default: () => props$l.tabs.lineColor
     },
     // 菜单选择中时的样式
     activeStyle: {
       type: [String, Object],
-      default: () => props$e.tabs.activeStyle
+      default: () => props$l.tabs.activeStyle
     },
     // 菜单非选中时的样式
     inactiveStyle: {
       type: [String, Object],
-      default: () => props$e.tabs.inactiveStyle
+      default: () => props$l.tabs.inactiveStyle
     },
     // 滑块长度
     lineWidth: {
       type: [String, Number],
-      default: () => props$e.tabs.lineWidth
+      default: () => props$l.tabs.lineWidth
     },
     // 滑块高度
     lineHeight: {
       type: [String, Number],
-      default: () => props$e.tabs.lineHeight
+      default: () => props$l.tabs.lineHeight
     },
     // 滑块背景显示大小，当滑块背景设置为图片时使用
     lineBgSize: {
       type: String,
-      default: () => props$e.tabs.lineBgSize
+      default: () => props$l.tabs.lineBgSize
     },
     // 菜单item的样式
     itemStyle: {
       type: [String, Object],
-      default: () => props$e.tabs.itemStyle
+      default: () => props$l.tabs.itemStyle
     },
     // 菜单是否可滚动
     scrollable: {
       type: Boolean,
-      default: () => props$e.tabs.scrollable
+      default: () => props$l.tabs.scrollable
     },
     // 当前选中标签的索引
     current: {
       type: [Number, String],
-      default: () => props$e.tabs.current
+      default: () => props$l.tabs.current
     },
     // 默认读取的键名
     keyName: {
       type: String,
-      default: () => props$e.tabs.keyName
+      default: () => props$l.tabs.keyName
     },
     // 左侧图标样式
     iconStyle: {
       type: [String, Object],
-      default: () => props$e.tabs.iconStyle
+      default: () => props$l.tabs.iconStyle
     }
   }
 });
-const props$a = defineMixin({
+const props$h = defineMixin({
   props: {
     // 吸顶容器到顶部某个距离的时候，进行吸顶，在H5平台，NavigationBar为44px
     offsetTop: {
       type: [String, Number],
-      default: () => props$e.sticky.offsetTop
+      default: () => props$l.sticky.offsetTop
     },
     // 自定义导航栏的高度
     customNavHeight: {
       type: [String, Number],
-      default: () => props$e.sticky.customNavHeight
+      default: () => props$l.sticky.customNavHeight
     },
     // 是否开启吸顶功能
     disabled: {
       type: Boolean,
-      default: () => props$e.sticky.disabled
+      default: () => props$l.sticky.disabled
     },
     // 吸顶区域的背景颜色
     bgColor: {
       type: String,
-      default: () => props$e.sticky.bgColor
+      default: () => props$l.sticky.bgColor
     },
     // z-index值
     zIndex: {
       type: [String, Number],
-      default: () => props$e.sticky.zIndex
+      default: () => props$l.sticky.zIndex
     },
     // 列表中的索引值
     index: {
       type: [String, Number],
-      default: () => props$e.sticky.index
+      default: () => props$l.sticky.index
     }
   }
 });
-const props$9 = defineMixin({
+const props$g = defineMixin({
   props: {
     // 图片地址
     src: {
       type: String,
-      default: () => props$e.image.src
+      default: () => props$l.image.src
     },
     // 裁剪模式
     mode: {
       type: String,
-      default: () => props$e.image.mode
+      default: () => props$l.image.mode
     },
     // 宽度，单位任意
     width: {
       type: [String, Number],
-      default: () => props$e.image.width
+      default: () => props$l.image.width
     },
     // 高度，单位任意
     height: {
       type: [String, Number],
-      default: () => props$e.image.height
+      default: () => props$l.image.height
     },
     // 图片形状，circle-圆形，square-方形
     shape: {
       type: String,
-      default: () => props$e.image.shape
+      default: () => props$l.image.shape
     },
     // 圆角，单位任意
     radius: {
       type: [String, Number],
-      default: () => props$e.image.radius
+      default: () => props$l.image.radius
     },
     // 是否懒加载，微信小程序、App、百度小程序、字节跳动小程序
     lazyLoad: {
       type: Boolean,
-      default: () => props$e.image.lazyLoad
+      default: () => props$l.image.lazyLoad
     },
     // 开启长按图片显示识别微信小程序码菜单
     showMenuByLongpress: {
       type: Boolean,
-      default: () => props$e.image.showMenuByLongpress
+      default: () => props$l.image.showMenuByLongpress
     },
     // 加载中的图标，或者小图片
     loadingIcon: {
       type: String,
-      default: () => props$e.image.loadingIcon
+      default: () => props$l.image.loadingIcon
     },
     // 加载失败的图标，或者小图片
     errorIcon: {
       type: String,
-      default: () => props$e.image.errorIcon
+      default: () => props$l.image.errorIcon
     },
     // 是否显示加载中的图标或者自定义的slot
     showLoading: {
       type: Boolean,
-      default: () => props$e.image.showLoading
+      default: () => props$l.image.showLoading
     },
     // 是否显示加载错误的图标或者自定义的slot
     showError: {
       type: Boolean,
-      default: () => props$e.image.showError
+      default: () => props$l.image.showError
     },
     // 是否需要淡入效果
     fade: {
       type: Boolean,
-      default: () => props$e.image.fade
+      default: () => props$l.image.fade
     },
     // 只支持网络资源，只对微信小程序有效
     webp: {
       type: Boolean,
-      default: () => props$e.image.webp
+      default: () => props$l.image.webp
     },
     // 过渡时间，单位ms
     duration: {
       type: [String, Number],
-      default: () => props$e.image.duration
+      default: () => props$l.image.duration
     },
     // 背景颜色，用于深色页面加载图片时，为了和背景色融合
     bgColor: {
       type: String,
-      default: () => props$e.image.bgColor
+      default: () => props$l.image.bgColor
     }
   }
 });
-const props$8 = defineMixin({
+const props$f = defineMixin({
   props: {
     // 内置图标名称，或图片路径，建议绝对路径
     icon: {
       type: String,
-      default: () => props$e.empty.icon
+      default: () => props$l.empty.icon
     },
     // 提示文字
     text: {
       type: String,
-      default: () => props$e.empty.text
+      default: () => props$l.empty.text
     },
     // 文字颜色
     textColor: {
       type: String,
-      default: () => props$e.empty.textColor
+      default: () => props$l.empty.textColor
     },
     // 文字大小
     textSize: {
       type: [String, Number],
-      default: () => props$e.empty.textSize
+      default: () => props$l.empty.textSize
     },
     // 图标的颜色
     iconColor: {
       type: String,
-      default: () => props$e.empty.iconColor
+      default: () => props$l.empty.iconColor
     },
     // 图标的大小
     iconSize: {
       type: [String, Number],
-      default: () => props$e.empty.iconSize
+      default: () => props$l.empty.iconSize
     },
     // 选择预置的图标类型
     mode: {
       type: String,
-      default: () => props$e.empty.mode
+      default: () => props$l.empty.mode
     },
     //  图标宽度，单位px
     width: {
       type: [String, Number],
-      default: () => props$e.empty.width
+      default: () => props$l.empty.width
     },
     // 图标高度，单位px
     height: {
       type: [String, Number],
-      default: () => props$e.empty.height
+      default: () => props$l.empty.height
     },
     // 是否显示组件
     show: {
       type: Boolean,
-      default: () => props$e.empty.show
+      default: () => props$l.empty.show
     },
     // 组件距离上一个元素之间的距离，默认px单位
     marginTop: {
       type: [String, Number],
-      default: () => props$e.empty.marginTop
+      default: () => props$l.empty.marginTop
     }
   }
 });
-const props$7 = defineMixin({
+const props$e = defineMixin({
   props: {
     // 显示的内容，数组
     text: {
       type: [Array, String],
-      default: () => props$e.noticeBar.text
+      default: () => props$l.noticeBar.text
     },
     // 通告滚动模式，row-横向滚动，column-竖向滚动
     direction: {
       type: String,
-      default: () => props$e.noticeBar.direction
+      default: () => props$l.noticeBar.direction
     },
     // direction = row时，是否使用步进形式滚动
     step: {
       type: Boolean,
-      default: () => props$e.noticeBar.step
+      default: () => props$l.noticeBar.step
     },
     // 是否显示左侧的音量图标
     icon: {
       type: String,
-      default: () => props$e.noticeBar.icon
+      default: () => props$l.noticeBar.icon
     },
     // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
     mode: {
       type: String,
-      default: () => props$e.noticeBar.mode
+      default: () => props$l.noticeBar.mode
     },
     // 文字颜色，各图标也会使用文字颜色
     color: {
       type: String,
-      default: () => props$e.noticeBar.color
+      default: () => props$l.noticeBar.color
     },
     // 背景颜色
     bgColor: {
       type: String,
-      default: () => props$e.noticeBar.bgColor
+      default: () => props$l.noticeBar.bgColor
     },
     // 水平滚动时的滚动速度，即每秒滚动多少px(px)，这有利于控制文字无论多少时，都能有一个恒定的速度
     speed: {
       type: [String, Number],
-      default: () => props$e.noticeBar.speed
+      default: () => props$l.noticeBar.speed
     },
     // 字体大小
     fontSize: {
       type: [String, Number],
-      default: () => props$e.noticeBar.fontSize
+      default: () => props$l.noticeBar.fontSize
     },
     // 滚动一个周期的时间长，单位ms
     duration: {
       type: [String, Number],
-      default: () => props$e.noticeBar.duration
+      default: () => props$l.noticeBar.duration
     },
     // 是否禁止用手滑动切换
     // 目前HX2.6.11，只支持App 2.5.5+、H5 2.5.5+、支付宝小程序、字节跳动小程序
     disableTouch: {
       type: Boolean,
-      default: () => props$e.noticeBar.disableTouch
+      default: () => props$l.noticeBar.disableTouch
     },
     // 跳转的页面路径
     url: {
       type: String,
-      default: () => props$e.noticeBar.url
+      default: () => props$l.noticeBar.url
     },
     // 页面跳转的类型
     linkType: {
       type: String,
-      default: () => props$e.noticeBar.linkType
+      default: () => props$l.noticeBar.linkType
     },
     justifyContent: {
       type: String,
-      default: () => props$e.noticeBar.justifyContent
+      default: () => props$l.noticeBar.justifyContent
+    }
+  }
+});
+const props$d = defineMixin({
+  props: {
+    modelValue: {
+      type: Array,
+      default: () => []
+    },
+    hasInput: {
+      type: Boolean,
+      default: false
+    },
+    inputProps: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+    disabled: {
+      type: Boolean,
+      default: () => props$l.picker.disabled
+    },
+    disabledColor: {
+      type: String,
+      default: () => props$l.picker.disabledColor
+    },
+    placeholder: {
+      type: String,
+      default: () => props$l.picker.placeholder
+    },
+    // 是否展示picker弹窗
+    show: {
+      type: Boolean,
+      default: () => props$l.picker.show
+    },
+    // 弹出的方向，可选值为 top bottom right left center
+    popupMode: {
+      type: String,
+      default: () => props$l.picker.popupMode
+    },
+    // 是否展示顶部的操作栏
+    showToolbar: {
+      type: Boolean,
+      default: () => props$l.picker.showToolbar
+    },
+    // 顶部标题
+    title: {
+      type: String,
+      default: () => props$l.picker.title
+    },
+    // 对象数组，设置每一列的数据
+    columns: {
+      type: Array,
+      default: () => props$l.picker.columns
+    },
+    // 是否显示加载中状态
+    loading: {
+      type: Boolean,
+      default: () => props$l.picker.loading
+    },
+    // 各列中，单个选项的高度
+    itemHeight: {
+      type: [String, Number],
+      default: () => props$l.picker.itemHeight
+    },
+    // 取消按钮的文字
+    cancelText: {
+      type: String,
+      default: () => props$l.picker.cancelText
+    },
+    // 确认按钮的文字
+    confirmText: {
+      type: String,
+      default: () => props$l.picker.confirmText
+    },
+    // 取消按钮的颜色
+    cancelColor: {
+      type: String,
+      default: () => props$l.picker.cancelColor
+    },
+    // 确认按钮的颜色
+    confirmColor: {
+      type: String,
+      default: () => props$l.picker.confirmColor
+    },
+    // 每列中可见选项的数量
+    visibleItemCount: {
+      type: [String, Number],
+      default: () => props$l.picker.visibleItemCount
+    },
+    // 选项对象中，需要展示的属性键名
+    keyName: {
+      type: String,
+      default: () => props$l.picker.keyName
+    },
+    // 选项对象中，需要获取的属性值键名
+    valueName: {
+      type: String,
+      default: () => props$l.picker.valueName
+    },
+    // 是否允许点击遮罩关闭选择器
+    closeOnClickOverlay: {
+      type: Boolean,
+      default: () => props$l.picker.closeOnClickOverlay
+    },
+    // 各列的默认索引
+    defaultIndex: {
+      type: Array,
+      default: () => props$l.picker.defaultIndex
+    },
+    // 是否在手指松开时立即触发 change 事件。若不开启则会在滚动动画结束后触发 change 事件，只在微信2.21.1及以上有效
+    immediateChange: {
+      type: Boolean,
+      default: () => props$l.picker.immediateChange
+    },
+    // 工具栏右侧插槽是否开启
+    toolbarRightSlot: {
+      type: Boolean,
+      default: false
+    },
+    // 层级
+    zIndex: {
+      type: [String, Number],
+      default: () => props$l.picker.zIndex
+    },
+    // 弹窗背景色，设置为transparent可去除白色背景
+    bgColor: {
+      type: String,
+      default: () => props$l.picker.bgColor
+    },
+    // 是否显示圆角
+    round: {
+      type: [Boolean, String, Number],
+      default: () => props$l.picker.round
+    },
+    // 动画时长，单位ms
+    duration: {
+      type: [String, Number],
+      default: () => props$l.picker.duration
+    },
+    // 遮罩的透明度，0-1之间
+    overlayOpacity: {
+      type: [Number, String],
+      default: () => props$l.picker.overlayOpacity
+    },
+    // 是否页面内展示
+    pageInline: {
+      type: Boolean,
+      default: () => props$l.picker.pageInline
+    },
+    // 蒙层样式样式
+    maskClass: {
+      type: String,
+      defualt: ""
+    },
+    // 蒙层样式样式
+    maskStyle: {
+      type: String,
+      defualt: ""
     }
   }
 });
@@ -13341,234 +13501,234 @@ const icons = {
   "uicon-zh": "",
   "uicon-en": ""
 };
-const props$6 = defineMixin({
+const props$c = defineMixin({
   props: {
     // 图标类名
     name: {
       type: String,
-      default: () => props$e.icon.name
+      default: () => props$l.icon.name
     },
     // 图标颜色，可接受主题色
     color: {
       type: String,
-      default: () => props$e.icon.color
+      default: () => props$l.icon.color
     },
     // 字体大小，单位px
     size: {
       type: [String, Number],
-      default: () => props$e.icon.size
+      default: () => props$l.icon.size
     },
     // 是否显示粗体
     bold: {
       type: Boolean,
-      default: () => props$e.icon.bold
+      default: () => props$l.icon.bold
     },
     // 点击图标的时候传递事件出去的index（用于区分点击了哪一个）
     index: {
       type: [String, Number],
-      default: () => props$e.icon.index
+      default: () => props$l.icon.index
     },
     // 触摸图标时的类名
     hoverClass: {
       type: String,
-      default: () => props$e.icon.hoverClass
+      default: () => props$l.icon.hoverClass
     },
     // 自定义扩展前缀，方便用户扩展自己的图标库
     customPrefix: {
       type: String,
-      default: () => props$e.icon.customPrefix
+      default: () => props$l.icon.customPrefix
     },
     // 图标右边或者下面的文字
     label: {
       type: [String, Number],
-      default: () => props$e.icon.label
+      default: () => props$l.icon.label
     },
     // label的位置，只能右边或者下边
     labelPos: {
       type: String,
-      default: () => props$e.icon.labelPos
+      default: () => props$l.icon.labelPos
     },
     // label的大小
     labelSize: {
       type: [String, Number],
-      default: () => props$e.icon.labelSize
+      default: () => props$l.icon.labelSize
     },
     // label的颜色
     labelColor: {
       type: String,
-      default: () => props$e.icon.labelColor
+      default: () => props$l.icon.labelColor
     },
     // label与图标的距离
     space: {
       type: [String, Number],
-      default: () => props$e.icon.space
+      default: () => props$l.icon.space
     },
     // 图片的mode
     imgMode: {
       type: String,
-      default: () => props$e.icon.imgMode
+      default: () => props$l.icon.imgMode
     },
     // 用于显示图片小图标时，图片的宽度
     width: {
       type: [String, Number],
-      default: () => props$e.icon.width
+      default: () => props$l.icon.width
     },
     // 用于显示图片小图标时，图片的高度
     height: {
       type: [String, Number],
-      default: () => props$e.icon.height
+      default: () => props$l.icon.height
     },
     // 用于解决某些情况下，让图标垂直居中的用途
     top: {
       type: [String, Number],
-      default: () => props$e.icon.top
+      default: () => props$l.icon.top
     },
     // 是否阻止事件传播
     stop: {
       type: Boolean,
-      default: () => props$e.icon.stop
+      default: () => props$l.icon.stop
     }
   }
 });
-const props$5 = defineMixin({
+const props$b = defineMixin({
   props: {
     // 是否显示组件
     show: {
       type: Boolean,
-      default: () => props$e.loadingIcon.show
+      default: () => props$l.loadingIcon.show
     },
     // 颜色
     color: {
       type: String,
-      default: () => props$e.loadingIcon.color
+      default: () => props$l.loadingIcon.color
     },
     // 提示文字颜色
     textColor: {
       type: String,
-      default: () => props$e.loadingIcon.textColor
+      default: () => props$l.loadingIcon.textColor
     },
     // 文字和图标是否垂直排列
     vertical: {
       type: Boolean,
-      default: () => props$e.loadingIcon.vertical
+      default: () => props$l.loadingIcon.vertical
     },
     // 模式选择，circle-圆形，spinner-花朵形，semicircle-半圆形
     mode: {
       type: String,
-      default: () => props$e.loadingIcon.mode
+      default: () => props$l.loadingIcon.mode
     },
     // 图标大小，单位默认px
     size: {
       type: [String, Number],
-      default: () => props$e.loadingIcon.size
+      default: () => props$l.loadingIcon.size
     },
     // 文字大小
     textSize: {
       type: [String, Number],
-      default: () => props$e.loadingIcon.textSize
+      default: () => props$l.loadingIcon.textSize
     },
     // 文字内容
     text: {
       type: [String, Number],
-      default: () => props$e.loadingIcon.text
+      default: () => props$l.loadingIcon.text
     },
     // 动画模式
     timingFunction: {
       type: String,
-      default: () => props$e.loadingIcon.timingFunction
+      default: () => props$l.loadingIcon.timingFunction
     },
     // 动画执行周期时间
     duration: {
       type: [String, Number],
-      default: () => props$e.loadingIcon.duration
+      default: () => props$l.loadingIcon.duration
     },
     // mode=circle时的暗边颜色
     inactiveColor: {
       type: String,
-      default: () => props$e.loadingIcon.inactiveColor
+      default: () => props$l.loadingIcon.inactiveColor
     }
   }
 });
-const props$4 = defineMixin({
+const props$a = defineMixin({
   props: {
     // 轮播的长度
     length: {
       type: [String, Number],
-      default: () => props$e.swiperIndicator.length
+      default: () => props$l.swiperIndicator.length
     },
     // 当前处于活动状态的轮播的索引
     current: {
       type: [String, Number],
-      default: () => props$e.swiperIndicator.current
+      default: () => props$l.swiperIndicator.current
     },
     // 指示器非激活颜色
     indicatorActiveColor: {
       type: String,
-      default: () => props$e.swiperIndicator.indicatorActiveColor
+      default: () => props$l.swiperIndicator.indicatorActiveColor
     },
     // 指示器的激活颜色
     indicatorInactiveColor: {
       type: String,
-      default: () => props$e.swiperIndicator.indicatorInactiveColor
+      default: () => props$l.swiperIndicator.indicatorInactiveColor
     },
     // 指示器模式，line-线型，dot-点型
     indicatorMode: {
       type: String,
-      default: () => props$e.swiperIndicator.indicatorMode
+      default: () => props$l.swiperIndicator.indicatorMode
     }
   }
 });
-const props$3 = defineMixin({
+const props$9 = defineMixin({
   props: {
     // 是否显示圆点
     isDot: {
       type: Boolean,
-      default: () => props$e.badge.isDot
+      default: () => props$l.badge.isDot
     },
     // 显示的内容
     value: {
       type: [Number, String],
-      default: () => props$e.badge.value
+      default: () => props$l.badge.value
     },
     // 显示的内容
     modelValue: {
       type: [Number, String],
-      default: () => props$e.badge.modelValue
+      default: () => props$l.badge.modelValue
     },
     // 是否显示
     show: {
       type: Boolean,
-      default: () => props$e.badge.show
+      default: () => props$l.badge.show
     },
     // 最大值，超过最大值会显示 '{max}+'
     max: {
       type: [Number, String],
-      default: () => props$e.badge.max
+      default: () => props$l.badge.max
     },
     // 主题类型，error|warning|success|primary
     type: {
       type: String,
-      default: () => props$e.badge.type
+      default: () => props$l.badge.type
     },
     // 当数值为 0 时，是否展示 Badge
     showZero: {
       type: Boolean,
-      default: () => props$e.badge.showZero
+      default: () => props$l.badge.showZero
     },
     // 背景颜色，优先级比type高，如设置，type参数会失效
     bgColor: {
       type: [String, null],
-      default: () => props$e.badge.bgColor
+      default: () => props$l.badge.bgColor
     },
     // 字体颜色
     color: {
       type: [String, null],
-      default: () => props$e.badge.color
+      default: () => props$l.badge.color
     },
     // 徽标形状，circle-四角均为圆角，horn-左下角为直角
     shape: {
       type: String,
-      default: () => props$e.badge.shape
+      default: () => props$l.badge.shape
     },
     // 设置数字的显示方式，overflow|ellipsis|limit
     // overflow会根据max字段判断，超出显示`${max}+`
@@ -13576,46 +13736,46 @@ const props$3 = defineMixin({
     // limit会依据1000作为判断条件，超出1000，显示`${value/1000}K`，比如2.2k、3.34w，最多保留2位小数
     numberType: {
       type: String,
-      default: () => props$e.badge.numberType
+      default: () => props$l.badge.numberType
     },
     // 设置badge的位置偏移，格式为 [x, y]，也即设置的为top和right的值，absolute为true时有效
     offset: {
       type: Array,
-      default: () => props$e.badge.offset
+      default: () => props$l.badge.offset
     },
     // 是否反转背景和字体颜色
     inverted: {
       type: Boolean,
-      default: () => props$e.badge.inverted
+      default: () => props$l.badge.inverted
     },
     // 是否绝对定位
     absolute: {
       type: Boolean,
-      default: () => props$e.badge.absolute
+      default: () => props$l.badge.absolute
     }
   }
 });
-const props$2 = defineMixin({
+const props$8 = defineMixin({
   props: {
     // 是否展示组件
     show: {
       type: Boolean,
-      default: () => props$e.transition.show
+      default: () => props$l.transition.show
     },
     // 使用的动画模式
     mode: {
       type: String,
-      default: () => props$e.transition.mode
+      default: () => props$l.transition.mode
     },
     // 动画的执行时间，单位ms
     duration: {
       type: [String, Number],
-      default: () => props$e.transition.duration
+      default: () => props$l.transition.duration
     },
     // 使用的动画过渡函数
     timingFunction: {
       type: String,
-      default: () => props$e.transition.timingFunction
+      default: () => props$l.transition.timingFunction
     }
   }
 });
@@ -13677,104 +13837,1624 @@ const transitionMixin = {
     }
   }
 };
-const props$1 = defineMixin({
+const props$7 = defineMixin({
   props: {
     // 显示的内容，字符串
     text: {
       type: [Array],
-      default: () => props$e.columnNotice.text
+      default: () => props$l.columnNotice.text
     },
     // 是否显示左侧的音量图标
     icon: {
       type: String,
-      default: () => props$e.columnNotice.icon
+      default: () => props$l.columnNotice.icon
     },
     // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
     mode: {
       type: String,
-      default: () => props$e.columnNotice.mode
+      default: () => props$l.columnNotice.mode
     },
     // 文字颜色，各图标也会使用文字颜色
     color: {
       type: String,
-      default: () => props$e.columnNotice.color
+      default: () => props$l.columnNotice.color
     },
     // 背景颜色
     bgColor: {
       type: String,
-      default: () => props$e.columnNotice.bgColor
+      default: () => props$l.columnNotice.bgColor
     },
     // 字体大小，单位px
     fontSize: {
       type: [String, Number],
-      default: () => props$e.columnNotice.fontSize
+      default: () => props$l.columnNotice.fontSize
     },
     // 水平滚动时的滚动速度，即每秒滚动多少px(px)，这有利于控制文字无论多少时，都能有一个恒定的速度
     speed: {
       type: [String, Number],
-      default: () => props$e.columnNotice.speed
+      default: () => props$l.columnNotice.speed
     },
     // direction = row时，是否使用步进形式滚动
     step: {
       type: Boolean,
-      default: () => props$e.columnNotice.step
+      default: () => props$l.columnNotice.step
     },
     // 滚动一个周期的时间长，单位ms
     duration: {
       type: [String, Number],
-      default: () => props$e.columnNotice.duration
+      default: () => props$l.columnNotice.duration
     },
     // 是否禁止用手滑动切换
     // 目前HX2.6.11，只支持App 2.5.5+、H5 2.5.5+、支付宝小程序、字节跳动小程序
     disableTouch: {
       type: Boolean,
-      default: () => props$e.columnNotice.disableTouch
+      default: () => props$l.columnNotice.disableTouch
     },
     justifyContent: {
       type: String,
-      default: () => props$e.columnNotice.justifyContent
+      default: () => props$l.columnNotice.justifyContent
     }
   }
 });
-const props = defineMixin({
+const props$6 = defineMixin({
   props: {
     // 显示的内容，字符串
     text: {
       type: String,
-      default: () => props$e.rowNotice.text
+      default: () => props$l.rowNotice.text
     },
     // 是否显示左侧的音量图标
     icon: {
       type: String,
-      default: () => props$e.rowNotice.icon
+      default: () => props$l.rowNotice.icon
     },
     // 通告模式，link-显示右箭头，closable-显示右侧关闭图标
     mode: {
       type: String,
-      default: () => props$e.rowNotice.mode
+      default: () => props$l.rowNotice.mode
     },
     // 文字颜色，各图标也会使用文字颜色
     color: {
       type: String,
-      default: () => props$e.rowNotice.color
+      default: () => props$l.rowNotice.color
     },
     // 背景颜色
     bgColor: {
       type: String,
-      default: () => props$e.rowNotice.bgColor
+      default: () => props$l.rowNotice.bgColor
     },
     // 字体大小，单位px
     fontSize: {
       type: [String, Number],
-      default: () => props$e.rowNotice.fontSize
+      default: () => props$l.rowNotice.fontSize
     },
     // 水平滚动时的滚动速度，即每秒滚动多少px(rpx)，这有利于控制文字无论多少时，都能有一个恒定的速度
     speed: {
       type: [String, Number],
-      default: () => props$e.rowNotice.speed
+      default: () => props$l.rowNotice.speed
     }
   }
 });
+const props$5 = defineMixin({
+  props: {
+    // 绑定的值
+    modelValue: {
+      type: [String, Number],
+      default: () => props$l.input.value
+    },
+    // number-数字输入键盘，app-vue下可以输入浮点数，app-nvue和小程序平台下只能输入整数
+    // idcard-身份证输入键盘，微信、支付宝、百度、QQ小程序
+    // digit-带小数点的数字键盘，App的nvue页面、微信、支付宝、百度、头条、QQ小程序
+    // text-文本输入键盘
+    type: {
+      type: String,
+      default: () => props$l.input.type
+    },
+    // 如果 textarea 是在一个 position:fixed 的区域，需要显示指定属性 fixed 为 true，
+    // 兼容性：微信小程序、百度小程序、字节跳动小程序、QQ小程序
+    fixed: {
+      type: Boolean,
+      default: () => props$l.input.fixed
+    },
+    // 是否禁用输入框
+    disabled: {
+      type: Boolean,
+      default: () => props$l.input.disabled
+    },
+    // 禁用状态时的背景色
+    disabledColor: {
+      type: String,
+      default: () => props$l.input.disabledColor
+    },
+    // 是否显示清除控件
+    clearable: {
+      type: Boolean,
+      default: false
+    },
+    // 是否仅在聚焦时显示清除控件
+    onlyClearableOnFocused: {
+      type: Boolean,
+      default: true
+    },
+    // 是否密码类型
+    password: {
+      type: Boolean,
+      default: () => props$l.input.password
+    },
+    // 最大输入长度，设置为 -1 的时候不限制最大长度
+    maxlength: {
+      type: [String, Number],
+      default: () => props$l.input.maxlength
+    },
+    // 	输入框为空时的占位符
+    placeholder: {
+      type: String,
+      default: () => props$l.input.placeholder
+    },
+    // 指定placeholder的样式类，注意页面或组件的style中写了scoped时，需要在类名前写/deep/
+    placeholderClass: {
+      type: String,
+      default: () => props$l.input.placeholderClass
+    },
+    // 指定placeholder的样式
+    placeholderStyle: {
+      type: [String, Object],
+      default: () => props$l.input.placeholderStyle
+    },
+    // 是否显示输入字数统计，只在 type ="text"或type ="textarea"时有效
+    showWordLimit: {
+      type: Boolean,
+      default: () => props$l.input.showWordLimit
+    },
+    // 设置右下角按钮的文字，有效值：send|search|next|go|done，兼容性详见uni-app文档
+    // https://uniapp.dcloud.io/component/input
+    // https://uniapp.dcloud.io/component/textarea
+    confirmType: {
+      type: String,
+      default: () => props$l.input.confirmType
+    },
+    // 点击键盘右下角按钮时是否保持键盘不收起，H5无效
+    confirmHold: {
+      type: Boolean,
+      default: () => props$l.input.confirmHold
+    },
+    // focus时，点击页面的时候不收起键盘，微信小程序有效
+    holdKeyboard: {
+      type: Boolean,
+      default: () => props$l.input.holdKeyboard
+    },
+    // 自动获取焦点
+    // 在 H5 平台能否聚焦以及软键盘是否跟随弹出，取决于当前浏览器本身的实现。nvue 页面不支持，需使用组件的 focus()、blur() 方法控制焦点
+    focus: {
+      type: Boolean,
+      default: () => props$l.input.focus
+    },
+    // 键盘收起时，是否自动失去焦点，目前仅App3.0.0+有效
+    autoBlur: {
+      type: Boolean,
+      default: () => props$l.input.autoBlur
+    },
+    // 是否去掉 iOS 下的默认内边距，仅微信小程序，且type=textarea时有效
+    disableDefaultPadding: {
+      type: Boolean,
+      default: () => props$l.input.disableDefaultPadding
+    },
+    // 指定focus时光标的位置
+    cursor: {
+      type: [String, Number],
+      default: () => props$l.input.cursor
+    },
+    // 输入框聚焦时底部与键盘的距离
+    cursorSpacing: {
+      type: [String, Number],
+      default: () => props$l.input.cursorSpacing
+    },
+    // 光标起始位置，自动聚集时有效，需与selection-end搭配使用
+    selectionStart: {
+      type: [String, Number],
+      default: () => props$l.input.selectionStart
+    },
+    // 光标结束位置，自动聚集时有效，需与selection-start搭配使用
+    selectionEnd: {
+      type: [String, Number],
+      default: () => props$l.input.selectionEnd
+    },
+    // 键盘弹起时，是否自动上推页面
+    adjustPosition: {
+      type: Boolean,
+      default: () => props$l.input.adjustPosition
+    },
+    // 输入框内容对齐方式，可选值为：left|center|right
+    inputAlign: {
+      type: String,
+      default: () => props$l.input.inputAlign
+    },
+    // 输入框字体的大小
+    fontSize: {
+      type: [String, Number],
+      default: () => props$l.input.fontSize
+    },
+    // 输入框字体颜色
+    color: {
+      type: String,
+      default: () => props$l.input.color
+    },
+    // 输入框前置图标
+    prefixIcon: {
+      type: String,
+      default: () => props$l.input.prefixIcon
+    },
+    // 前置图标样式，对象或字符串
+    prefixIconStyle: {
+      type: [String, Object],
+      default: () => props$l.input.prefixIconStyle
+    },
+    // 输入框后置图标
+    suffixIcon: {
+      type: String,
+      default: () => props$l.input.suffixIcon
+    },
+    // 后置图标样式，对象或字符串
+    suffixIconStyle: {
+      type: [String, Object],
+      default: () => props$l.input.suffixIconStyle
+    },
+    // 边框类型，surround-四周边框，bottom-底部边框，none-无边框
+    border: {
+      type: String,
+      default: () => props$l.input.border
+    },
+    // 是否只读，与disabled不同之处在于disabled会置灰组件，而readonly则不会
+    readonly: {
+      type: Boolean,
+      default: () => props$l.input.readonly
+    },
+    // 输入框形状，circle-圆形，square-方形
+    shape: {
+      type: String,
+      default: () => props$l.input.shape
+    },
+    // 用于处理或者过滤输入框内容的方法
+    formatter: {
+      type: [Function, null],
+      default: () => props$l.input.formatter
+    },
+    // 是否忽略组件内对文本合成系统事件的处理
+    ignoreCompositionEvent: {
+      type: Boolean,
+      default: true
+    },
+    // 光标颜色
+    cursorColor: {
+      type: String,
+      default: () => props$l.input.cursorColor
+    },
+    // 密码类型可见性切换
+    passwordVisibilityToggle: {
+      type: Boolean,
+      default: () => props$l.input.passwordVisibilityToggle
+    }
+  }
+});
+const props$4 = defineMixin({
+  props: {
+    // 是否展示工具条
+    show: {
+      type: Boolean,
+      default: () => props$l.toolbar.show
+    },
+    // 取消按钮的文字
+    cancelText: {
+      type: String,
+      default: () => props$l.toolbar.cancelText
+    },
+    // 确认按钮的文字
+    confirmText: {
+      type: String,
+      default: () => props$l.toolbar.confirmText
+    },
+    // 取消按钮的颜色
+    cancelColor: {
+      type: String,
+      default: () => props$l.toolbar.cancelColor
+    },
+    // 确认按钮的颜色
+    confirmColor: {
+      type: String,
+      default: () => props$l.toolbar.confirmColor
+    },
+    // 标题文字
+    title: {
+      type: String,
+      default: () => props$l.toolbar.title
+    },
+    // 开启右侧插槽
+    rightSlot: {
+      type: Boolean,
+      default: false
+    }
+  }
+});
+const props$3 = defineMixin({
+  props: {
+    // 是否展示弹窗
+    show: {
+      type: Boolean,
+      default: () => props$l.popup.show
+    },
+    // 是否显示遮罩
+    overlay: {
+      type: Boolean,
+      default: () => props$l.popup.overlay
+    },
+    // 弹出的方向，可选值为 top bottom right left center
+    mode: {
+      type: String,
+      default: () => props$l.popup.mode
+    },
+    // 动画时长，单位ms
+    duration: {
+      type: [String, Number],
+      default: () => props$l.popup.duration
+    },
+    // 是否显示关闭图标
+    closeable: {
+      type: Boolean,
+      default: () => props$l.popup.closeable
+    },
+    // 自定义遮罩的样式
+    overlayStyle: {
+      type: [Object, String],
+      default: () => props$l.popup.overlayStyle
+    },
+    // 点击遮罩是否关闭弹窗
+    closeOnClickOverlay: {
+      type: Boolean,
+      default: () => props$l.popup.closeOnClickOverlay
+    },
+    // 层级
+    zIndex: {
+      type: [String, Number],
+      default: () => props$l.popup.zIndex
+    },
+    // 是否为iPhoneX留出底部安全距离
+    safeAreaInsetBottom: {
+      type: Boolean,
+      default: () => props$l.popup.safeAreaInsetBottom
+    },
+    // 是否留出顶部安全距离（状态栏高度）
+    safeAreaInsetTop: {
+      type: Boolean,
+      default: () => props$l.popup.safeAreaInsetTop
+    },
+    // 自定义关闭图标位置，top-left为左上角，top-right为右上角，bottom-left为左下角，bottom-right为右下角
+    closeIconPos: {
+      type: String,
+      default: () => props$l.popup.closeIconPos
+    },
+    // 是否显示圆角
+    round: {
+      type: [Boolean, String, Number],
+      default: () => props$l.popup.round
+    },
+    // mode=center，也即中部弹出时，是否使用缩放模式
+    zoom: {
+      type: Boolean,
+      default: () => props$l.popup.zoom
+    },
+    // 弹窗背景色，设置为transparent可去除白色背景
+    bgColor: {
+      type: String,
+      default: () => props$l.popup.bgColor
+    },
+    // 遮罩的透明度，0-1之间
+    overlayOpacity: {
+      type: [Number, String],
+      default: () => props$l.popup.overlayOpacity
+    },
+    // 是否页面内展示
+    pageInline: {
+      type: Boolean,
+      default: () => props$l.popup.pageInline
+    },
+    // 是否页开启手势滑动
+    touchable: {
+      type: Boolean,
+      default: () => props$l.popup.touchable
+    },
+    // 手势滑动最小高度
+    minHeight: {
+      type: [String],
+      default: () => props$l.popup.minHeight
+    },
+    // 手势滑动最大高度
+    maxHeight: {
+      type: [String],
+      default: () => props$l.popup.maxHeight
+    }
+  }
+});
+let QRCode = {};
+(function() {
+  function unicodeFormat8(code2) {
+    var c0, c1, c2;
+    if (code2 < 128) {
+      return [code2];
+    } else if (code2 < 2048) {
+      c0 = 192 + (code2 >> 6);
+      c1 = 128 + (code2 & 63);
+      return [c0, c1];
+    } else {
+      c0 = 224 + (code2 >> 12);
+      c1 = 128 + (code2 >> 6 & 63);
+      c2 = 128 + (code2 & 63);
+      return [c0, c1, c2];
+    }
+  }
+  function getUTF8Bytes(string2) {
+    var utf8codes = [];
+    for (var i2 = 0; i2 < string2.length; i2++) {
+      var code2 = string2.charCodeAt(i2);
+      var utf8 = unicodeFormat8(code2);
+      for (var j = 0; j < utf8.length; j++) {
+        utf8codes.push(utf8[j]);
+      }
+    }
+    return utf8codes;
+  }
+  function QRCodeAlg(data, errorCorrectLevel) {
+    this.typeNumber = -1;
+    this.errorCorrectLevel = errorCorrectLevel;
+    this.modules = null;
+    this.moduleCount = 0;
+    this.dataCache = null;
+    this.rsBlocks = null;
+    this.totalDataCount = -1;
+    this.data = data;
+    this.utf8bytes = getUTF8Bytes(data);
+    this.make();
+  }
+  QRCodeAlg.prototype = {
+    constructor: QRCodeAlg,
+    /**
+     * 获取二维码矩阵大小
+     * @return {num} 矩阵大小
+     */
+    getModuleCount: function() {
+      return this.moduleCount;
+    },
+    /**
+     * 编码
+     */
+    make: function() {
+      this.getRightType();
+      this.dataCache = this.createData();
+      this.createQrcode();
+    },
+    /**
+     * 设置二位矩阵功能图形
+     * @param  {bool} test 表示是否在寻找最好掩膜阶段
+     * @param  {num} maskPattern 掩膜的版本
+     */
+    makeImpl: function(maskPattern) {
+      this.moduleCount = this.typeNumber * 4 + 17;
+      this.modules = new Array(this.moduleCount);
+      for (var row = 0; row < this.moduleCount; row++) {
+        this.modules[row] = new Array(this.moduleCount);
+      }
+      this.setupPositionProbePattern(0, 0);
+      this.setupPositionProbePattern(this.moduleCount - 7, 0);
+      this.setupPositionProbePattern(0, this.moduleCount - 7);
+      this.setupPositionAdjustPattern();
+      this.setupTimingPattern();
+      this.setupTypeInfo(true, maskPattern);
+      if (this.typeNumber >= 7) {
+        this.setupTypeNumber(true);
+      }
+      this.mapData(this.dataCache, maskPattern);
+    },
+    /**
+     * 设置二维码的位置探测图形
+     * @param  {num} row 探测图形的中心横坐标
+     * @param  {num} col 探测图形的中心纵坐标
+     */
+    setupPositionProbePattern: function(row, col) {
+      for (var r2 = -1; r2 <= 7; r2++) {
+        if (row + r2 <= -1 || this.moduleCount <= row + r2)
+          continue;
+        for (var c = -1; c <= 7; c++) {
+          if (col + c <= -1 || this.moduleCount <= col + c)
+            continue;
+          if (0 <= r2 && r2 <= 6 && (c == 0 || c == 6) || 0 <= c && c <= 6 && (r2 == 0 || r2 == 6) || 2 <= r2 && r2 <= 4 && 2 <= c && c <= 4) {
+            this.modules[row + r2][col + c] = true;
+          } else {
+            this.modules[row + r2][col + c] = false;
+          }
+        }
+      }
+    },
+    /**
+     * 创建二维码
+     * @return {[type]} [description]
+     */
+    createQrcode: function() {
+      var minLostPoint = 0;
+      var pattern = 0;
+      var bestModules = null;
+      for (var i2 = 0; i2 < 8; i2++) {
+        this.makeImpl(i2);
+        var lostPoint = QRUtil.getLostPoint(this);
+        if (i2 == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i2;
+          bestModules = this.modules;
+        }
+      }
+      this.modules = bestModules;
+      this.setupTypeInfo(false, pattern);
+      if (this.typeNumber >= 7) {
+        this.setupTypeNumber(false);
+      }
+    },
+    /**
+     * 设置定位图形
+     * @return {[type]} [description]
+     */
+    setupTimingPattern: function() {
+      for (var r2 = 8; r2 < this.moduleCount - 8; r2++) {
+        if (this.modules[r2][6] != null) {
+          continue;
+        }
+        this.modules[r2][6] = r2 % 2 == 0;
+        if (this.modules[6][r2] != null) {
+          continue;
+        }
+        this.modules[6][r2] = r2 % 2 == 0;
+      }
+    },
+    /**
+     * 设置矫正图形
+     * @return {[type]} [description]
+     */
+    setupPositionAdjustPattern: function() {
+      var pos = QRUtil.getPatternPosition(this.typeNumber);
+      for (var i2 = 0; i2 < pos.length; i2++) {
+        for (var j = 0; j < pos.length; j++) {
+          var row = pos[i2];
+          var col = pos[j];
+          if (this.modules[row][col] != null) {
+            continue;
+          }
+          for (var r2 = -2; r2 <= 2; r2++) {
+            for (var c = -2; c <= 2; c++) {
+              if (r2 == -2 || r2 == 2 || c == -2 || c == 2 || r2 == 0 && c == 0) {
+                this.modules[row + r2][col + c] = true;
+              } else {
+                this.modules[row + r2][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    },
+    /**
+     * 设置版本信息（7以上版本才有）
+     * @param  {bool} test 是否处于判断最佳掩膜阶段
+     * @return {[type]}      [description]
+     */
+    setupTypeNumber: function(test2) {
+      var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+      for (var i2 = 0; i2 < 18; i2++) {
+        var mod = !test2 && (bits >> i2 & 1) == 1;
+        this.modules[Math.floor(i2 / 3)][i2 % 3 + this.moduleCount - 8 - 3] = mod;
+        this.modules[i2 % 3 + this.moduleCount - 8 - 3][Math.floor(i2 / 3)] = mod;
+      }
+    },
+    /**
+     * 设置格式信息（纠错等级和掩膜版本）
+     * @param  {bool} test
+     * @param  {num} maskPattern 掩膜版本
+     * @return {}
+     */
+    setupTypeInfo: function(test2, maskPattern) {
+      var data = QRErrorCorrectLevel[this.errorCorrectLevel] << 3 | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+      for (var i2 = 0; i2 < 15; i2++) {
+        var mod = !test2 && (bits >> i2 & 1) == 1;
+        if (i2 < 6) {
+          this.modules[i2][8] = mod;
+        } else if (i2 < 8) {
+          this.modules[i2 + 1][8] = mod;
+        } else {
+          this.modules[this.moduleCount - 15 + i2][8] = mod;
+        }
+        var mod = !test2 && (bits >> i2 & 1) == 1;
+        if (i2 < 8) {
+          this.modules[8][this.moduleCount - i2 - 1] = mod;
+        } else if (i2 < 9) {
+          this.modules[8][15 - i2 - 1 + 1] = mod;
+        } else {
+          this.modules[8][15 - i2 - 1] = mod;
+        }
+      }
+      this.modules[this.moduleCount - 8][8] = !test2;
+    },
+    /**
+     * 数据编码
+     * @return {[type]} [description]
+     */
+    createData: function() {
+      var buffer2 = new QRBitBuffer();
+      var lengthBits = this.typeNumber > 9 ? 16 : 8;
+      buffer2.put(4, 4);
+      buffer2.put(this.utf8bytes.length, lengthBits);
+      for (var i2 = 0, l = this.utf8bytes.length; i2 < l; i2++) {
+        buffer2.put(this.utf8bytes[i2], 8);
+      }
+      if (buffer2.length + 4 <= this.totalDataCount * 8) {
+        buffer2.put(0, 4);
+      }
+      while (buffer2.length % 8 != 0) {
+        buffer2.putBit(false);
+      }
+      while (true) {
+        if (buffer2.length >= this.totalDataCount * 8) {
+          break;
+        }
+        buffer2.put(QRCodeAlg.PAD0, 8);
+        if (buffer2.length >= this.totalDataCount * 8) {
+          break;
+        }
+        buffer2.put(QRCodeAlg.PAD1, 8);
+      }
+      return this.createBytes(buffer2);
+    },
+    /**
+     * 纠错码编码
+     * @param  {buffer} buffer 数据编码
+     * @return {[type]}
+     */
+    createBytes: function(buffer2) {
+      var offset = 0;
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+      var length = this.rsBlock.length / 3;
+      var rsBlocks = new Array();
+      for (var i2 = 0; i2 < length; i2++) {
+        var count = this.rsBlock[i2 * 3 + 0];
+        var totalCount = this.rsBlock[i2 * 3 + 1];
+        var dataCount = this.rsBlock[i2 * 3 + 2];
+        for (var j = 0; j < count; j++) {
+          rsBlocks.push([dataCount, totalCount]);
+        }
+      }
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+      for (var r2 = 0; r2 < rsBlocks.length; r2++) {
+        var dcCount = rsBlocks[r2][0];
+        var ecCount = rsBlocks[r2][1] - dcCount;
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+        dcdata[r2] = new Array(dcCount);
+        for (var i2 = 0; i2 < dcdata[r2].length; i2++) {
+          dcdata[r2][i2] = 255 & buffer2.buffer[i2 + offset];
+        }
+        offset += dcCount;
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = new QRPolynomial(dcdata[r2], rsPoly.getLength() - 1);
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r2] = new Array(rsPoly.getLength() - 1);
+        for (var i2 = 0; i2 < ecdata[r2].length; i2++) {
+          var modIndex = i2 + modPoly.getLength() - ecdata[r2].length;
+          ecdata[r2][i2] = modIndex >= 0 ? modPoly.get(modIndex) : 0;
+        }
+      }
+      var data = new Array(this.totalDataCount);
+      var index2 = 0;
+      for (var i2 = 0; i2 < maxDcCount; i2++) {
+        for (var r2 = 0; r2 < rsBlocks.length; r2++) {
+          if (i2 < dcdata[r2].length) {
+            data[index2++] = dcdata[r2][i2];
+          }
+        }
+      }
+      for (var i2 = 0; i2 < maxEcCount; i2++) {
+        for (var r2 = 0; r2 < rsBlocks.length; r2++) {
+          if (i2 < ecdata[r2].length) {
+            data[index2++] = ecdata[r2][i2];
+          }
+        }
+      }
+      return data;
+    },
+    /**
+     * 布置模块，构建最终信息
+     * @param  {} data
+     * @param  {} maskPattern
+     * @return {}
+     */
+    mapData: function(data, maskPattern) {
+      var inc = -1;
+      var row = this.moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+        if (col == 6)
+          col--;
+        while (true) {
+          for (var c = 0; c < 2; c++) {
+            if (this.modules[row][col - c] == null) {
+              var dark = false;
+              if (byteIndex < data.length) {
+                dark = (data[byteIndex] >>> bitIndex & 1) == 1;
+              }
+              var mask = QRUtil.getMask(maskPattern, row, col - c);
+              if (mask) {
+                dark = !dark;
+              }
+              this.modules[row][col - c] = dark;
+              bitIndex--;
+              if (bitIndex == -1) {
+                byteIndex++;
+                bitIndex = 7;
+              }
+            }
+          }
+          row += inc;
+          if (row < 0 || this.moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    }
+  };
+  QRCodeAlg.PAD0 = 236;
+  QRCodeAlg.PAD1 = 17;
+  var QRErrorCorrectLevel = [1, 0, 3, 2];
+  var QRMaskPattern = {
+    PATTERN000: 0,
+    PATTERN001: 1,
+    PATTERN010: 2,
+    PATTERN011: 3,
+    PATTERN100: 4,
+    PATTERN101: 5,
+    PATTERN110: 6,
+    PATTERN111: 7
+  };
+  var QRUtil = {
+    /*
+    每个版本矫正图形的位置
+     */
+    PATTERN_POSITION_TABLE: [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ],
+    G15: 1 << 10 | 1 << 8 | 1 << 5 | 1 << 4 | 1 << 2 | 1 << 1 | 1 << 0,
+    G18: 1 << 12 | 1 << 11 | 1 << 10 | 1 << 9 | 1 << 8 | 1 << 5 | 1 << 2 | 1 << 0,
+    G15_MASK: 1 << 14 | 1 << 12 | 1 << 10 | 1 << 4 | 1 << 1,
+    /*
+    BCH编码格式信息
+     */
+    getBCHTypeInfo: function(data) {
+      var d = data << 10;
+      while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+        d ^= QRUtil.G15 << QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15);
+      }
+      return (data << 10 | d) ^ QRUtil.G15_MASK;
+    },
+    /*
+    BCH编码版本信息
+     */
+    getBCHTypeNumber: function(data) {
+      var d = data << 12;
+      while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+        d ^= QRUtil.G18 << QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18);
+      }
+      return data << 12 | d;
+    },
+    /*
+    获取BCH位信息
+     */
+    getBCHDigit: function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit++;
+        data >>>= 1;
+      }
+      return digit;
+    },
+    /*
+    获取版本对应的矫正图形位置
+     */
+    getPatternPosition: function(typeNumber) {
+      return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
+    },
+    /*
+    掩膜算法
+     */
+    getMask: function(maskPattern, i2, j) {
+      switch (maskPattern) {
+        case QRMaskPattern.PATTERN000:
+          return (i2 + j) % 2 == 0;
+        case QRMaskPattern.PATTERN001:
+          return i2 % 2 == 0;
+        case QRMaskPattern.PATTERN010:
+          return j % 3 == 0;
+        case QRMaskPattern.PATTERN011:
+          return (i2 + j) % 3 == 0;
+        case QRMaskPattern.PATTERN100:
+          return (Math.floor(i2 / 2) + Math.floor(j / 3)) % 2 == 0;
+        case QRMaskPattern.PATTERN101:
+          return i2 * j % 2 + i2 * j % 3 == 0;
+        case QRMaskPattern.PATTERN110:
+          return (i2 * j % 2 + i2 * j % 3) % 2 == 0;
+        case QRMaskPattern.PATTERN111:
+          return (i2 * j % 3 + (i2 + j) % 2) % 2 == 0;
+        default:
+          throw new Error("bad maskPattern:" + maskPattern);
+      }
+    },
+    /*
+    获取RS的纠错多项式
+     */
+    getErrorCorrectPolynomial: function(errorCorrectLength) {
+      var a = new QRPolynomial([1], 0);
+      for (var i2 = 0; i2 < errorCorrectLength; i2++) {
+        a = a.multiply(new QRPolynomial([1, QRMath.gexp(i2)], 0));
+      }
+      return a;
+    },
+    /*
+    获取评价
+     */
+    getLostPoint: function(qrCode) {
+      var moduleCount = qrCode.getModuleCount(), lostPoint = 0, darkCount = 0;
+      for (var row = 0; row < moduleCount; row++) {
+        var sameCount = 0;
+        var head = qrCode.modules[row][0];
+        for (var col = 0; col < moduleCount; col++) {
+          var current = qrCode.modules[row][col];
+          if (col < moduleCount - 6) {
+            if (current && !qrCode.modules[row][col + 1] && qrCode.modules[row][col + 2] && qrCode.modules[row][col + 3] && qrCode.modules[row][col + 4] && !qrCode.modules[row][col + 5] && qrCode.modules[row][col + 6]) {
+              if (col < moduleCount - 10) {
+                if (qrCode.modules[row][col + 7] && qrCode.modules[row][col + 8] && qrCode.modules[row][col + 9] && qrCode.modules[row][col + 10]) {
+                  lostPoint += 40;
+                }
+              } else if (col > 3) {
+                if (qrCode.modules[row][col - 1] && qrCode.modules[row][col - 2] && qrCode.modules[row][col - 3] && qrCode.modules[row][col - 4]) {
+                  lostPoint += 40;
+                }
+              }
+            }
+          }
+          if (row < moduleCount - 1 && col < moduleCount - 1) {
+            var count = 0;
+            if (current)
+              count++;
+            if (qrCode.modules[row + 1][col])
+              count++;
+            if (qrCode.modules[row][col + 1])
+              count++;
+            if (qrCode.modules[row + 1][col + 1])
+              count++;
+            if (count == 0 || count == 4) {
+              lostPoint += 3;
+            }
+          }
+          if (head ^ current) {
+            sameCount++;
+          } else {
+            head = current;
+            if (sameCount >= 5) {
+              lostPoint += 3 + sameCount - 5;
+            }
+            sameCount = 1;
+          }
+          if (current) {
+            darkCount++;
+          }
+        }
+      }
+      for (var col = 0; col < moduleCount; col++) {
+        var sameCount = 0;
+        var head = qrCode.modules[0][col];
+        for (var row = 0; row < moduleCount; row++) {
+          var current = qrCode.modules[row][col];
+          if (row < moduleCount - 6) {
+            if (current && !qrCode.modules[row + 1][col] && qrCode.modules[row + 2][col] && qrCode.modules[row + 3][col] && qrCode.modules[row + 4][col] && !qrCode.modules[row + 5][col] && qrCode.modules[row + 6][col]) {
+              if (row < moduleCount - 10) {
+                if (qrCode.modules[row + 7][col] && qrCode.modules[row + 8][col] && qrCode.modules[row + 9][col] && qrCode.modules[row + 10][col]) {
+                  lostPoint += 40;
+                }
+              } else if (row > 3) {
+                if (qrCode.modules[row - 1][col] && qrCode.modules[row - 2][col] && qrCode.modules[row - 3][col] && qrCode.modules[row - 4][col]) {
+                  lostPoint += 40;
+                }
+              }
+            }
+          }
+          if (head ^ current) {
+            sameCount++;
+          } else {
+            head = current;
+            if (sameCount >= 5) {
+              lostPoint += 3 + sameCount - 5;
+            }
+            sameCount = 1;
+          }
+        }
+      }
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+      return lostPoint;
+    }
+  };
+  var QRMath = {
+    /*
+    将n转化为a^m
+     */
+    glog: function(n2) {
+      if (n2 < 1) {
+        throw new Error("glog(" + n2 + ")");
+      }
+      return QRMath.LOG_TABLE[n2];
+    },
+    /*
+    将a^m转化为n
+     */
+    gexp: function(n2) {
+      while (n2 < 0) {
+        n2 += 255;
+      }
+      while (n2 >= 256) {
+        n2 -= 255;
+      }
+      return QRMath.EXP_TABLE[n2];
+    },
+    EXP_TABLE: new Array(256),
+    LOG_TABLE: new Array(256)
+  };
+  for (var i = 0; i < 8; i++) {
+    QRMath.EXP_TABLE[i] = 1 << i;
+  }
+  for (var i = 8; i < 256; i++) {
+    QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4] ^ QRMath.EXP_TABLE[i - 5] ^ QRMath.EXP_TABLE[i - 6] ^ QRMath.EXP_TABLE[i - 8];
+  }
+  for (var i = 0; i < 255; i++) {
+    QRMath.LOG_TABLE[QRMath.EXP_TABLE[i]] = i;
+  }
+  function QRPolynomial(num, shift) {
+    if (num.length == void 0) {
+      throw new Error(num.length + "/" + shift);
+    }
+    var offset = 0;
+    while (offset < num.length && num[offset] == 0) {
+      offset++;
+    }
+    this.num = new Array(num.length - offset + shift);
+    for (var i2 = 0; i2 < num.length - offset; i2++) {
+      this.num[i2] = num[i2 + offset];
+    }
+  }
+  QRPolynomial.prototype = {
+    get: function(index2) {
+      return this.num[index2];
+    },
+    getLength: function() {
+      return this.num.length;
+    },
+    /**
+     * 多项式乘法
+     * @param  {QRPolynomial} e 被乘多项式
+     * @return {[type]}   [description]
+     */
+    multiply: function(e2) {
+      var num = new Array(this.getLength() + e2.getLength() - 1);
+      for (var i2 = 0; i2 < this.getLength(); i2++) {
+        for (var j = 0; j < e2.getLength(); j++) {
+          num[i2 + j] ^= QRMath.gexp(QRMath.glog(this.get(i2)) + QRMath.glog(e2.get(j)));
+        }
+      }
+      return new QRPolynomial(num, 0);
+    },
+    /**
+     * 多项式模运算
+     * @param  {QRPolynomial} e 模多项式
+     * @return {}
+     */
+    mod: function(e2) {
+      var tl = this.getLength(), el = e2.getLength();
+      if (tl - el < 0) {
+        return this;
+      }
+      var num = new Array(tl);
+      for (var i2 = 0; i2 < tl; i2++) {
+        num[i2] = this.get(i2);
+      }
+      while (num.length >= el) {
+        var ratio = QRMath.glog(num[0]) - QRMath.glog(e2.get(0));
+        for (var i2 = 0; i2 < e2.getLength(); i2++) {
+          num[i2] ^= QRMath.gexp(QRMath.glog(e2.get(i2)) + ratio);
+        }
+        while (num[0] == 0) {
+          num.shift();
+        }
+      }
+      return new QRPolynomial(num, 0);
+    }
+  };
+  var RS_BLOCK_TABLE = [
+    // L
+    // M
+    // Q
+    // H
+    // 1
+    [1, 26, 19],
+    [1, 26, 16],
+    [1, 26, 13],
+    [1, 26, 9],
+    // 2
+    [1, 44, 34],
+    [1, 44, 28],
+    [1, 44, 22],
+    [1, 44, 16],
+    // 3
+    [1, 70, 55],
+    [1, 70, 44],
+    [2, 35, 17],
+    [2, 35, 13],
+    // 4
+    [1, 100, 80],
+    [2, 50, 32],
+    [2, 50, 24],
+    [4, 25, 9],
+    // 5
+    [1, 134, 108],
+    [2, 67, 43],
+    [2, 33, 15, 2, 34, 16],
+    [2, 33, 11, 2, 34, 12],
+    // 6
+    [2, 86, 68],
+    [4, 43, 27],
+    [4, 43, 19],
+    [4, 43, 15],
+    // 7
+    [2, 98, 78],
+    [4, 49, 31],
+    [2, 32, 14, 4, 33, 15],
+    [4, 39, 13, 1, 40, 14],
+    // 8
+    [2, 121, 97],
+    [2, 60, 38, 2, 61, 39],
+    [4, 40, 18, 2, 41, 19],
+    [4, 40, 14, 2, 41, 15],
+    // 9
+    [2, 146, 116],
+    [3, 58, 36, 2, 59, 37],
+    [4, 36, 16, 4, 37, 17],
+    [4, 36, 12, 4, 37, 13],
+    // 10
+    [2, 86, 68, 2, 87, 69],
+    [4, 69, 43, 1, 70, 44],
+    [6, 43, 19, 2, 44, 20],
+    [6, 43, 15, 2, 44, 16],
+    // 11
+    [4, 101, 81],
+    [1, 80, 50, 4, 81, 51],
+    [4, 50, 22, 4, 51, 23],
+    [3, 36, 12, 8, 37, 13],
+    // 12
+    [2, 116, 92, 2, 117, 93],
+    [6, 58, 36, 2, 59, 37],
+    [4, 46, 20, 6, 47, 21],
+    [7, 42, 14, 4, 43, 15],
+    // 13
+    [4, 133, 107],
+    [8, 59, 37, 1, 60, 38],
+    [8, 44, 20, 4, 45, 21],
+    [12, 33, 11, 4, 34, 12],
+    // 14
+    [3, 145, 115, 1, 146, 116],
+    [4, 64, 40, 5, 65, 41],
+    [11, 36, 16, 5, 37, 17],
+    [11, 36, 12, 5, 37, 13],
+    // 15
+    [5, 109, 87, 1, 110, 88],
+    [5, 65, 41, 5, 66, 42],
+    [5, 54, 24, 7, 55, 25],
+    [11, 36, 12],
+    // 16
+    [5, 122, 98, 1, 123, 99],
+    [7, 73, 45, 3, 74, 46],
+    [15, 43, 19, 2, 44, 20],
+    [3, 45, 15, 13, 46, 16],
+    // 17
+    [1, 135, 107, 5, 136, 108],
+    [10, 74, 46, 1, 75, 47],
+    [1, 50, 22, 15, 51, 23],
+    [2, 42, 14, 17, 43, 15],
+    // 18
+    [5, 150, 120, 1, 151, 121],
+    [9, 69, 43, 4, 70, 44],
+    [17, 50, 22, 1, 51, 23],
+    [2, 42, 14, 19, 43, 15],
+    // 19
+    [3, 141, 113, 4, 142, 114],
+    [3, 70, 44, 11, 71, 45],
+    [17, 47, 21, 4, 48, 22],
+    [9, 39, 13, 16, 40, 14],
+    // 20
+    [3, 135, 107, 5, 136, 108],
+    [3, 67, 41, 13, 68, 42],
+    [15, 54, 24, 5, 55, 25],
+    [15, 43, 15, 10, 44, 16],
+    // 21
+    [4, 144, 116, 4, 145, 117],
+    [17, 68, 42],
+    [17, 50, 22, 6, 51, 23],
+    [19, 46, 16, 6, 47, 17],
+    // 22
+    [2, 139, 111, 7, 140, 112],
+    [17, 74, 46],
+    [7, 54, 24, 16, 55, 25],
+    [34, 37, 13],
+    // 23
+    [4, 151, 121, 5, 152, 122],
+    [4, 75, 47, 14, 76, 48],
+    [11, 54, 24, 14, 55, 25],
+    [16, 45, 15, 14, 46, 16],
+    // 24
+    [6, 147, 117, 4, 148, 118],
+    [6, 73, 45, 14, 74, 46],
+    [11, 54, 24, 16, 55, 25],
+    [30, 46, 16, 2, 47, 17],
+    // 25
+    [8, 132, 106, 4, 133, 107],
+    [8, 75, 47, 13, 76, 48],
+    [7, 54, 24, 22, 55, 25],
+    [22, 45, 15, 13, 46, 16],
+    // 26
+    [10, 142, 114, 2, 143, 115],
+    [19, 74, 46, 4, 75, 47],
+    [28, 50, 22, 6, 51, 23],
+    [33, 46, 16, 4, 47, 17],
+    // 27
+    [8, 152, 122, 4, 153, 123],
+    [22, 73, 45, 3, 74, 46],
+    [8, 53, 23, 26, 54, 24],
+    [12, 45, 15, 28, 46, 16],
+    // 28
+    [3, 147, 117, 10, 148, 118],
+    [3, 73, 45, 23, 74, 46],
+    [4, 54, 24, 31, 55, 25],
+    [11, 45, 15, 31, 46, 16],
+    // 29
+    [7, 146, 116, 7, 147, 117],
+    [21, 73, 45, 7, 74, 46],
+    [1, 53, 23, 37, 54, 24],
+    [19, 45, 15, 26, 46, 16],
+    // 30
+    [5, 145, 115, 10, 146, 116],
+    [19, 75, 47, 10, 76, 48],
+    [15, 54, 24, 25, 55, 25],
+    [23, 45, 15, 25, 46, 16],
+    // 31
+    [13, 145, 115, 3, 146, 116],
+    [2, 74, 46, 29, 75, 47],
+    [42, 54, 24, 1, 55, 25],
+    [23, 45, 15, 28, 46, 16],
+    // 32
+    [17, 145, 115],
+    [10, 74, 46, 23, 75, 47],
+    [10, 54, 24, 35, 55, 25],
+    [19, 45, 15, 35, 46, 16],
+    // 33
+    [17, 145, 115, 1, 146, 116],
+    [14, 74, 46, 21, 75, 47],
+    [29, 54, 24, 19, 55, 25],
+    [11, 45, 15, 46, 46, 16],
+    // 34
+    [13, 145, 115, 6, 146, 116],
+    [14, 74, 46, 23, 75, 47],
+    [44, 54, 24, 7, 55, 25],
+    [59, 46, 16, 1, 47, 17],
+    // 35
+    [12, 151, 121, 7, 152, 122],
+    [12, 75, 47, 26, 76, 48],
+    [39, 54, 24, 14, 55, 25],
+    [22, 45, 15, 41, 46, 16],
+    // 36
+    [6, 151, 121, 14, 152, 122],
+    [6, 75, 47, 34, 76, 48],
+    [46, 54, 24, 10, 55, 25],
+    [2, 45, 15, 64, 46, 16],
+    // 37
+    [17, 152, 122, 4, 153, 123],
+    [29, 74, 46, 14, 75, 47],
+    [49, 54, 24, 10, 55, 25],
+    [24, 45, 15, 46, 46, 16],
+    // 38
+    [4, 152, 122, 18, 153, 123],
+    [13, 74, 46, 32, 75, 47],
+    [48, 54, 24, 14, 55, 25],
+    [42, 45, 15, 32, 46, 16],
+    // 39
+    [20, 147, 117, 4, 148, 118],
+    [40, 75, 47, 7, 76, 48],
+    [43, 54, 24, 22, 55, 25],
+    [10, 45, 15, 67, 46, 16],
+    // 40
+    [19, 148, 118, 6, 149, 119],
+    [18, 75, 47, 31, 76, 48],
+    [34, 54, 24, 34, 55, 25],
+    [20, 45, 15, 61, 46, 16]
+  ];
+  QRCodeAlg.prototype.getRightType = function() {
+    for (var typeNumber = 1; typeNumber < 41; typeNumber++) {
+      var rsBlock = RS_BLOCK_TABLE[(typeNumber - 1) * 4 + this.errorCorrectLevel];
+      if (rsBlock == void 0) {
+        throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + this.errorCorrectLevel);
+      }
+      var length = rsBlock.length / 3;
+      var totalDataCount = 0;
+      for (var i2 = 0; i2 < length; i2++) {
+        var count = rsBlock[i2 * 3 + 0];
+        var dataCount = rsBlock[i2 * 3 + 2];
+        totalDataCount += dataCount * count;
+      }
+      var lengthBytes = typeNumber > 9 ? 2 : 1;
+      if (this.utf8bytes.length + lengthBytes < totalDataCount || typeNumber == 40) {
+        this.typeNumber = typeNumber;
+        this.rsBlock = rsBlock;
+        this.totalDataCount = totalDataCount;
+        break;
+      }
+    }
+  };
+  function QRBitBuffer() {
+    this.buffer = new Array();
+    this.length = 0;
+  }
+  QRBitBuffer.prototype = {
+    get: function(index2) {
+      var bufIndex = Math.floor(index2 / 8);
+      return this.buffer[bufIndex] >>> 7 - index2 % 8 & 1;
+    },
+    put: function(num, length) {
+      for (var i2 = 0; i2 < length; i2++) {
+        this.putBit(num >>> length - i2 - 1 & 1);
+      }
+    },
+    putBit: function(bit) {
+      var bufIndex = Math.floor(this.length / 8);
+      if (this.buffer.length <= bufIndex) {
+        this.buffer.push(0);
+      }
+      if (bit) {
+        this.buffer[bufIndex] |= 128 >>> this.length % 8;
+      }
+      this.length++;
+    }
+  };
+  let qrcodeAlgObjCache = [];
+  QRCode = function(opt) {
+    this.options = {
+      text: "",
+      size: 256,
+      correctLevel: 3,
+      background: "#ffffff",
+      foreground: "#000000",
+      pdground: "#000000",
+      image: "",
+      imageSize: 30,
+      canvasId: opt.canvasId,
+      nvueContext: opt.nvueContext,
+      context: opt.context,
+      usingComponents: opt.usingComponents,
+      showLoading: opt.showLoading,
+      loadingText: opt.loadingText
+    };
+    let canvas = null;
+    if (typeof opt === "string") {
+      opt = {
+        text: opt
+      };
+    }
+    if (opt) {
+      for (var i2 in opt) {
+        this.options[i2] = opt[i2];
+      }
+    }
+    var qrCodeAlg = null;
+    for (var i2 = 0, l = qrcodeAlgObjCache.length; i2 < l; i2++) {
+      if (qrcodeAlgObjCache[i2].text == this.options.text && qrcodeAlgObjCache[i2].text.correctLevel == this.options.correctLevel) {
+        qrCodeAlg = qrcodeAlgObjCache[i2].obj;
+        break;
+      }
+    }
+    if (i2 == l) {
+      qrCodeAlg = new QRCodeAlg(this.options.text, this.options.correctLevel);
+      qrcodeAlgObjCache.push({
+        text: this.options.text,
+        correctLevel: this.options.correctLevel,
+        obj: qrCodeAlg
+      });
+    }
+    let getForeGround = function(config2) {
+      var options2 = config2.options;
+      if (options2.pdground && (config2.row > 1 && config2.row < 5 && config2.col > 1 && config2.col < 5 || config2.row > config2.count - 6 && config2.row < config2.count - 2 && config2.col > 1 && config2.col < 5 || config2.row > 1 && config2.row < 5 && config2.col > config2.count - 6 && config2.col < config2.count - 2)) {
+        return options2.pdground;
+      }
+      return options2.foreground;
+    };
+    let getCanvas = async (id) => {
+      return new Promise((resolve2, reject) => {
+        try {
+          const query = index$1.createSelectorQuery().in(this.options.context);
+          query.select(`#${id}`).fields({ node: true, size: true }).exec((res) => {
+            resolve2(res[0].node);
+          });
+        } catch (e2) {
+          index$1.__f__("error", "at node_modules/uview-plus/components/u-qrcode/qrcode.js:1101", "createCanvasContextFail", e2);
+        }
+      });
+    };
+    let createCanvas = async function(options2) {
+      let isApp = false;
+      if (options2.showLoading) {
+        index$1.showLoading({
+          title: options2.loadingText,
+          mask: true
+        });
+      }
+      var ctx = "";
+      if (options2.nvueContext) {
+        ctx = options2.nvueContext;
+      } else {
+        canvas = await getCanvas(options2.canvasId);
+        canvas.width = options2.size;
+        canvas.height = options2.size;
+        ctx = canvas.getContext("2d");
+      }
+      options2.context.ctx = ctx;
+      options2.context.canvas = canvas;
+      var count = qrCodeAlg.getModuleCount();
+      var ratioSize = options2.size;
+      var ratioImgSize = options2.imageSize;
+      var tileW = (ratioSize / count).toPrecision(4);
+      var tileH = (ratioSize / count).toPrecision(4);
+      for (var row = 0; row < count; row++) {
+        for (var col = 0; col < count; col++) {
+          var w2 = Math.ceil((col + 1) * tileW) - Math.floor(col * tileW);
+          var h = Math.ceil((row + 1) * tileH) - Math.floor(row * tileH);
+          var foreground = getForeGround({
+            row,
+            col,
+            count,
+            options: options2
+          });
+          if (options2.nvueContext) {
+            ctx.setFillStyle(qrCodeAlg.modules[row][col] ? foreground : options2.background);
+          } else {
+            ctx.fillStyle = qrCodeAlg.modules[row][col] ? foreground : options2.background;
+          }
+          ctx.fillRect(Math.round(col * tileW), Math.round(row * tileH), w2, h);
+        }
+      }
+      if (options2.image) {
+        let drawRoundedRect = function(ctxi, x2, y2, width, height, r2, lineWidth, fill, stroke) {
+          if (options2.nvueContext || isApp) {
+            ctxi.setLineWidth(lineWidth);
+            ctxi.setFillStyle(options2.background);
+            ctxi.setStrokeStyle(options2.background);
+          } else {
+            ctxi.lineWidth = lineWidth;
+            ctxi.fillStyle = options2.background;
+            ctxi.strokeStyle = options2.background;
+          }
+          ctxi.beginPath();
+          ctxi.moveTo(x2 + r2, y2);
+          ctxi.lineTo(x2 + width, y2);
+          ctxi.arc(x2 + width - r2, y2 + r2, r2, -Math.PI / 2, 0);
+          ctxi.lineTo(x2 + width, y2 + height - r2);
+          ctxi.arc(x2 + width - r2, y2 + height - r2, r2, 0, Math.PI / 2);
+          ctxi.lineTo(x2 + r2, y2 + height);
+          ctxi.arc(x2 + r2, y2 + height - r2, r2, Math.PI / 2, Math.PI);
+          ctxi.lineTo(x2, y2 + r2);
+          ctxi.arc(x2 + r2, y2 + r2, r2, Math.PI, Math.PI * 3 / 2);
+          ctxi.closePath();
+          if (fill) {
+            ctxi.fill();
+          }
+          if (stroke) {
+            ctxi.stroke();
+          }
+        };
+        var x = Number(((ratioSize - ratioImgSize) / 2).toFixed(2));
+        var y = Number(((ratioSize - ratioImgSize) / 2).toFixed(2));
+        drawRoundedRect(ctx, x, y, ratioImgSize, ratioImgSize, 2, 6, true, true);
+        if (options2.nvueContext) {
+          ctx.drawImage(options2.image, x, y, ratioImgSize, ratioImgSize);
+        } else {
+          const img = canvas.createImage();
+          img.onload = () => {
+            ctx.drawImage(img, x, y, ratioImgSize, ratioImgSize);
+          };
+          img.src = options2.image;
+        }
+      }
+      setTimeout(() => {
+        if (options2.nvueContext || isApp) {
+          ctx.draw(true, () => {
+            setTimeout(() => {
+              if (options2.nvueContext) {
+                ctx.toTempFilePath(
+                  0,
+                  0,
+                  options2.width,
+                  options2.height,
+                  options2.width,
+                  options2.height,
+                  "",
+                  1,
+                  function(res) {
+                    if (options2.cbResult) {
+                      options2.cbResult(res.tempFilePath);
+                    }
+                  }
+                );
+              } else {
+                index$1.canvasToTempFilePath({
+                  width: options2.width,
+                  height: options2.height,
+                  destWidth: options2.width,
+                  destHeight: options2.height,
+                  canvasId: options2.canvasId,
+                  quality: Number(1),
+                  success: function(res) {
+                    if (options2.cbResult) {
+                      if (!empty2(res.tempFilePath)) {
+                        options2.cbResult(res.tempFilePath);
+                      } else if (!empty2(res.apFilePath)) {
+                        options2.cbResult(res.apFilePath);
+                      } else {
+                        options2.cbResult(res.tempFilePath);
+                      }
+                    }
+                  },
+                  fail: function(res) {
+                    if (options2.cbResult) {
+                      options2.cbResult(res);
+                    }
+                  },
+                  complete: function() {
+                    index$1.hideLoading();
+                  }
+                }, options2.context);
+              }
+            }, options2.text.length + 100);
+          });
+        } else {
+          options2.cbResult("");
+        }
+      }, options2.usingComponents ? 0 : 150);
+    };
+    createCanvas(this.options);
+    let empty2 = function(v) {
+      let tp = typeof v, rt = false;
+      if (tp == "number" && String(v) == "") {
+        rt = true;
+      } else if (tp == "undefined") {
+        rt = true;
+      } else if (tp == "object") {
+        if (JSON.stringify(v) == "{}" || JSON.stringify(v) == "[]" || v == null)
+          rt = true;
+      } else if (tp == "string") {
+        if (v == "" || v == "undefined" || v == "null" || v == "{}" || v == "[]")
+          rt = true;
+      } else if (tp == "function") {
+        rt = false;
+      }
+      return rt;
+    };
+  };
+  QRCode.prototype.clear = function(fn) {
+    var ctx = "";
+    if (options.nvueContext) {
+      ctx = options.nvueContext;
+    } else {
+      index$1.createCanvasContext(this.options.canvasId, this.options.context);
+    }
+    ctx.clearRect(0, 0, this.options.size, this.options.size);
+    ctx.draw(false, () => {
+      if (fn) {
+        fn();
+      }
+    });
+  };
+})();
+const QRCode$1 = QRCode;
+const props$2 = defineMixin({
+  props: {
+    // 是否显示遮罩
+    show: {
+      type: Boolean,
+      default: () => props$l.overlay.show
+    },
+    // 层级z-index
+    zIndex: {
+      type: [String, Number],
+      default: () => props$l.overlay.zIndex
+    },
+    // 遮罩的过渡时间，单位为ms
+    duration: {
+      type: [String, Number],
+      default: () => props$l.overlay.duration
+    },
+    // 不透明度值，当做rgba的第四个参数
+    opacity: {
+      type: [String, Number],
+      default: () => props$l.overlay.opacity
+    }
+  }
+});
+const props$1 = defineMixin({
+  props: {
+    bgColor: {
+      type: String,
+      default: () => props$l.statusBar.bgColor
+    },
+    // 状态栏获取得高度
+    height: {
+      type: Number,
+      default: () => props$l.statusBar.height
+    }
+  }
+});
+const props = defineMixin({
+  props: {}
+});
+exports.QRCode = QRCode$1;
 exports._export_sfc = _export_sfc;
 exports.addStyle = addStyle;
 exports.addUnit = addUnit;
@@ -13782,11 +15462,13 @@ exports.colorGradient = colorGradient;
 exports.computed = computed;
 exports.config = config;
 exports.createSSRApp = createSSRApp;
+exports.deepClone = deepClone;
 exports.deepMerge = deepMerge$1;
 exports.e = e;
 exports.error = error;
 exports.f = f;
 exports.fontUtil = fontUtil;
+exports.formValidate = formValidate;
 exports.getDeviceInfo = getDeviceInfo;
 exports.getPx = getPx;
 exports.getWindowInfo = getWindowInfo;
@@ -13800,25 +15482,33 @@ exports.o = o;
 exports.onMounted = onMounted;
 exports.os = os;
 exports.p = p;
-exports.props = props$d;
-exports.props$1 = props$c;
-exports.props$10 = props$4;
-exports.props$11 = props$3;
-exports.props$12 = props$2;
-exports.props$13 = props$1;
-exports.props$14 = props;
-exports.props$2 = props$b;
-exports.props$3 = props$e;
-exports.props$4 = props$a;
-exports.props$5 = props$9;
-exports.props$6 = props$8;
-exports.props$7 = props$7;
-exports.props$8 = props$6;
-exports.props$9 = props$5;
+exports.props = props$k;
+exports.props$1 = props$j;
+exports.props$10 = props$b;
+exports.props$11 = props$a;
+exports.props$12 = props$9;
+exports.props$13 = props$8;
+exports.props$14 = props$7;
+exports.props$15 = props$6;
+exports.props$16 = props$5;
+exports.props$17 = props$4;
+exports.props$18 = props$3;
+exports.props$19 = props$2;
+exports.props$2 = props$i;
+exports.props$20 = props$1;
+exports.props$21 = props;
+exports.props$3 = props$l;
+exports.props$4 = props$h;
+exports.props$5 = props$g;
+exports.props$6 = props$f;
+exports.props$7 = props$e;
+exports.props$8 = props$d;
+exports.props$9 = props$c;
 exports.r = r;
 exports.reactive = reactive;
 exports.ref = ref;
 exports.resolveComponent = resolveComponent;
+exports.rpx2px = rpx2px;
 exports.s = s;
 exports.sleep = sleep;
 exports.sr = sr;

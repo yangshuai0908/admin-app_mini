@@ -2,7 +2,7 @@
 const common_vendor = require("../../../../common/vendor.js");
 const _sfc_main = {
   name: "u-row-notice",
-  mixins: [common_vendor.mpMixin, common_vendor.mixin, common_vendor.props$14],
+  mixins: [common_vendor.mpMixin, common_vendor.mixin, common_vendor.props$15],
   data() {
     return {
       animationDuration: "0",

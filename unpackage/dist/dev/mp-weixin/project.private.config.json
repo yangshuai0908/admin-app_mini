@@ -6,8 +6,8 @@
           "name": "pages/login/index",
           "pathName": "pages/login/index",
           "query": "",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "pages/my/index",

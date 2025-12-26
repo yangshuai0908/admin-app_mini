@@ -14,9 +14,9 @@ if (!Math) {
 const _sfc_main = {
   __name: "index",
   setup(__props) {
-    const systemInfo = common_vendor.wx$1.getSystemInfoSync();
+    const windowInfo = common_vendor.wx$1.getWindowInfo();
     const menuButtonInfo = common_vendor.wx$1.getMenuButtonBoundingClientRect();
-    const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight);
+    const customNavBarHeight = windowInfo.statusBarHeight + (menuButtonInfo.top - windowInfo.statusBarHeight);
     const text = common_vendor.ref("uview-plus UI众多组件覆盖开发过程的各个需求，组件功能丰富，多端兼容。让您快速集成，开箱即用");
     const cartList = common_vendor.ref([
       {
@@ -203,7 +203,7 @@ const _sfc_main = {
             n: item.id
           });
         }),
-        h: common_assets._imports_0$2,
+        h: common_assets._imports_2,
         i: common_vendor.f(recommendList.value, (item, k0, i0) => {
           return {
             a: item.image,

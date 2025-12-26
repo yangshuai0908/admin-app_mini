@@ -40,6 +40,44 @@
 			}
 		}
 	],
+	"subpackages": [
+		{
+			"root": "subpkg",
+			"pages": [
+				// {
+				// 	"path": "pages/goods/detail",
+				// 	"style": {
+				// 		"navigationBarTitleText": "商品详情"
+				// 	}
+				// },
+				{
+					"path": "pages/user/coupon",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "pages/user/address",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "pages/user/address-form",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "pages/user/invite",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}
+			],
+			"independent": true // 是否为独立分包（默认false）
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

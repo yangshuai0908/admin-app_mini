@@ -1,0 +1,6 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "up-poster": "../../../node-modules/uview-plus/components/u-poster/u-poster"
+  }
+}

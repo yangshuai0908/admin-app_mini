@@ -1,0 +1,1 @@
+<view class="up-poster data-v-78eb1c61"><canvas wx:if="{{a}}" class="up-poster__hidden-canvas data-v-78eb1c61" canvas-id="{{b}}" id="{{c}}" style="{{'width:' + d + ';' + ('height:' + e)}}"></canvas><up-qrcode wx:if="{{h}}" u-r="qrCode" class="{{['r', 'data-v-78eb1c61', 'up-poster__hidden-qrcode', g]}}" u-i="78eb1c61-0" bind:__l="__l" u-p="{{h}}"/></view>

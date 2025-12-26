@@ -1,20 +1,12 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const common_assets = require("../../common/assets.js");
-if (!Array) {
-  const _easycom_up_sticky2 = common_vendor.resolveComponent("up-sticky");
-  _easycom_up_sticky2();
-}
-const _easycom_up_sticky = () => "../../node-modules/uview-plus/components/u-sticky/u-sticky.js";
-if (!Math) {
-  _easycom_up_sticky();
-}
 const _sfc_main = {
   __name: "index",
   setup(__props) {
-    const systemInfo = common_vendor.wx$1.getSystemInfoSync();
+    const windowInfo = common_vendor.wx$1.getWindowInfo();
     const menuButtonInfo = common_vendor.wx$1.getMenuButtonBoundingClientRect();
-    const customNavBarHeight = systemInfo.statusBarHeight + (menuButtonInfo.top - systemInfo.statusBarHeight);
+    const customNavBarHeight = windowInfo.statusBarHeight + (menuButtonInfo.top - windowInfo.statusBarHeight);
     const userInfo = common_vendor.ref({
       avatar: "../../static/avatar.png",
       nickname: "宠物爱好者",
@@ -36,12 +28,12 @@ const _sfc_main = {
     const serviceList = common_vendor.ref([
       { id: 1, text: "我的收藏", icon: "../../static/my/我的收藏.png", url: "/pages/my/favorites" },
       { id: 2, text: "浏览历史", icon: "../../static/my/浏览历史.png", url: "/pages/my/history" },
-      { id: 3, text: "地址管理", icon: "../../static/my/地址管理.png", url: "/pages/my/address" },
-      { id: 4, text: "优惠券", icon: "../../static/my/优惠券.png", url: "/pages/my/coupons" },
+      { id: 3, text: "地址管理", icon: "../../static/my/地址管理.png", url: "/subpkg/pages/user/address" },
+      { id: 4, text: "优惠券", icon: "../../static/my/优惠券.png", url: "/subpkg/pages/user/coupon" },
       { id: 5, text: "积分商城", icon: "../../static/my/积分商城.png", url: "/pages/my/points" },
       { id: 6, text: "客服中心", icon: "../../static/my/客服中心.png", url: "/pages/my/service" },
       { id: 7, text: "帮助中心", icon: "../../static/my/帮助中心.png", url: "/pages/my/help" },
-      { id: 8, text: "邀请好友", icon: "../../static/my/邀请好友.png", url: "/pages/my/invite" }
+      { id: 8, text: "邀请好友", icon: "../../static/my/邀请好友.png", url: "/subpkg/pages/user/invite" }
     ]);
     const otherList = common_vendor.ref([
       { id: 1, text: "关于我们", icon: "../../static/my/关于我们.png", url: "/pages/my/about" },
@@ -58,19 +50,31 @@ const _sfc_main = {
       });
     };
     const goToLogin = () => {
-      common_vendor.index.__f__("log", "at pages/my/index.vue:161", "点击登录被触发，当前登录状态:", isLoggedIn.value);
+      common_vendor.index.__f__("log", "at pages/my/index.vue:162", "点击登录被触发，当前登录状态:", isLoggedIn.value);
       common_vendor.index.navigateTo({
         url: "/pages/login/index",
         success: () => {
-          common_vendor.index.__f__("log", "at pages/my/index.vue:167", "跳转成功");
+          common_vendor.index.__f__("log", "at pages/my/index.vue:168", "跳转成功");
         },
         fail: (err) => {
-          common_vendor.index.__f__("log", "at pages/my/index.vue:170", "跳转失败:", err);
+          common_vendor.index.__f__("log", "at pages/my/index.vue:171", "跳转失败:", err);
           common_vendor.index.showToast({
             title: "跳转失败",
             icon: "none"
           });
         }
+      });
+    };
+    const goToCoupons = () => {
+      if (!isLoggedIn.value) {
+        common_vendor.index.showToast({
+          title: "请先登录",
+          icon: "none"
+        });
+        return;
+      }
+      common_vendor.index.navigateTo({
+        url: "/subpkg/pages/user/coupon"
       });
     };
     const goToOrderList = (type) => {
@@ -112,7 +116,7 @@ const _sfc_main = {
               common_vendor.index.removeStorageSync("isLoggedIn");
               common_vendor.index.removeStorageSync("userInfo");
             } catch (e) {
-              common_vendor.index.__f__("log", "at pages/my/index.vue:222", "清除存储失败:", e);
+              common_vendor.index.__f__("log", "at pages/my/index.vue:237", "清除存储失败:", e);
             }
             userInfo.value = {
               avatar: "../../static/default-avatar.png",
@@ -142,12 +146,12 @@ const _sfc_main = {
       try {
         const isLoggedInStorage = common_vendor.index.getStorageSync("isLoggedIn");
         const userInfoStorage = common_vendor.index.getStorageSync("userInfo");
-        common_vendor.index.__f__("log", "at pages/my/index.vue:260", "存储的登录状态:", isLoggedInStorage);
-        common_vendor.index.__f__("log", "at pages/my/index.vue:261", "存储的用户信息:", userInfoStorage);
+        common_vendor.index.__f__("log", "at pages/my/index.vue:275", "存储的登录状态:", isLoggedInStorage);
+        common_vendor.index.__f__("log", "at pages/my/index.vue:276", "存储的用户信息:", userInfoStorage);
         if (isLoggedInStorage && userInfoStorage) {
           isLoggedIn.value = true;
           userInfo.value = userInfoStorage;
-          common_vendor.index.__f__("log", "at pages/my/index.vue:266", "设置登录状态为true，用户信息已更新");
+          common_vendor.index.__f__("log", "at pages/my/index.vue:281", "设置登录状态为true，用户信息已更新");
         } else {
           isLoggedIn.value = false;
           userInfo.value = {
@@ -159,22 +163,22 @@ const _sfc_main = {
             coupons: 0,
             balance: "0.00"
           };
-          common_vendor.index.__f__("log", "at pages/my/index.vue:278", "设置登录状态为false，使用默认用户信息");
+          common_vendor.index.__f__("log", "at pages/my/index.vue:293", "设置登录状态为false，使用默认用户信息");
         }
       } catch (e) {
-        common_vendor.index.__f__("log", "at pages/my/index.vue:281", "检查登录状态失败:", e);
+        common_vendor.index.__f__("log", "at pages/my/index.vue:296", "检查登录状态失败:", e);
         isLoggedIn.value = false;
       }
     };
     common_vendor.onMounted(() => {
-      common_vendor.index.__f__("log", "at pages/my/index.vue:287", "我的页面加载完成");
+      common_vendor.index.__f__("log", "at pages/my/index.vue:302", "我的页面加载完成");
       checkLoginStatus();
     });
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: customNavBarHeight + "px",
         b: userInfo.value.avatar,
-        c: common_assets._imports_0$3,
+        c: common_assets._imports_0$2,
         d: common_vendor.o(goToProfile),
         e: common_vendor.t(userInfo.value.nickname || "宠物爱好者"),
         f: !isLoggedIn.value
@@ -187,10 +191,11 @@ const _sfc_main = {
         j: common_vendor.t(userInfo.value.level || "普通会员"),
         k: common_vendor.t(userInfo.value.points || 0),
         l: common_vendor.t(userInfo.value.coupons || 0),
-        m: common_vendor.t(userInfo.value.balance || "0.00"),
-        n: common_assets._imports_1,
-        o: common_vendor.o(($event) => goToOrderList("all")),
-        p: common_vendor.f(orderTabs.value, (tab, k0, i0) => {
+        m: common_vendor.o(goToCoupons),
+        n: common_vendor.t(userInfo.value.balance || "0.00"),
+        o: common_assets._imports_1,
+        p: common_vendor.o(($event) => goToOrderList("all")),
+        q: common_vendor.f(orderTabs.value, (tab, k0, i0) => {
           return common_vendor.e({
             a: tab.icon,
             b: common_vendor.t(tab.text),
@@ -202,7 +207,7 @@ const _sfc_main = {
             f: common_vendor.o(($event) => goToOrderList(tab.type), tab.type)
           });
         }),
-        q: common_vendor.f(serviceList.value, (item, k0, i0) => {
+        r: common_vendor.f(serviceList.value, (item, k0, i0) => {
           return {
             a: item.icon,
             b: common_vendor.t(item.text),
@@ -210,7 +215,7 @@ const _sfc_main = {
             d: common_vendor.o(($event) => handleServiceClick(item), item.id)
           };
         }),
-        r: common_vendor.f(otherList.value, (item, k0, i0) => {
+        s: common_vendor.f(otherList.value, (item, k0, i0) => {
           return {
             a: item.icon,
             b: common_vendor.t(item.text),
@@ -218,10 +223,10 @@ const _sfc_main = {
             d: common_vendor.o(($event) => handleOtherClick(item), item.id)
           };
         }),
-        s: common_assets._imports_1,
-        t: isLoggedIn.value
+        t: common_assets._imports_1,
+        v: isLoggedIn.value
       }, isLoggedIn.value ? {
-        v: common_vendor.o(logout)
+        w: common_vendor.o(logout)
       } : {});
     };
   }
